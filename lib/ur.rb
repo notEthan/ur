@@ -19,6 +19,7 @@ module Ur
   autoload :FaradayMiddleware, 'ur/middleware'
   autoload :RackMiddleware, 'ur/middleware'
   autoload :Faraday, 'ur/faraday'
+  autoload :Weblink, 'ur/weblink'
 
   Request = self.properties['request']
   Response = self.properties['response']

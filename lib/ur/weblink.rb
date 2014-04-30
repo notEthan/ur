@@ -110,6 +110,11 @@ module Ur
       rel && other_rel && rel.downcase == other_rel.downcase
     end
 
+    # a string of this weblink, appropriate for adding to a Link header
+    def to_s
+      "<#{target_uri}>" + attributes.map { |k,v| %Q(; #{k}="#{v}") }.join('')
+    end
+
     private
 
     # if uri is nil, returns nil; otherwise, tries to return a Addressable::URI

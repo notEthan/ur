@@ -9,24 +9,17 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ethan"]
   spec.email         = ["ethan@unth"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = 'ur: unified request representation'
+  spec.description   = 'ur provides a unified representation of a request and response. it can be interpreted from rack, faraday, or potentially other sources, and provides a consistent interface to access the attributes inherent to the request and additional useful parsers and computation from the request.'
+  spec.homepage      = "https://github.com/notEthan/ur"
   spec.license       = "MIT"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
-
+  ignore_files = %w(.gitignore .travis.yml Gemfile test)
+  ignore_files_re = %r{\A(#{ignore_files.map { |f| Regexp.escape(f) }.join('|')})(/|\z)}
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+    `git ls-files -z`.split("\x0").reject { |f| f.match(ignore_files_re) }
   end
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }

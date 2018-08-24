@@ -51,6 +51,43 @@ class Ur
   require 'ur/processing'
 
   class << self
+    def from_rack_request(request_env)
+      if request_env.is_a?(Rack::Request)
+        rack_request = request_env
+        env = request_env.env
+      else
+        rack_request = Rack::Request.new(request_env)
+        env = request_env
+      end
+
+      Ur.new({}).tap do |ur|
+        ur.processing.begin!
+        ur.bound = 'inbound'
+        ur.request['method'] = rack_request.request_method
+        ur.request.headers = env.map do |(key, value)|
+          http_match = key.match(/\AHTTP_/)
+          if http_match
+            name = http_match.post_match.downcase
+            {name => value}
+          else
+            name = %w(content_type content_length).detect { |sname| sname.downcase == key.downcase }
+            if name
+              {name => value}
+            end
+          end
+        end.compact.inject({}, &:update)
+        ur.request.addressable_uri = Addressable::URI.new(
+          :scheme => rack_request.scheme,
+          :host => rack_request.host,
+          :port => rack_request.port,
+          :path => rack_request.path,
+          :query => (rack_request.query_string unless rack_request.query_string.empty?)
+        )
+        env["rack.input"].rewind
+        ur.request.body = env["rack.input"].read
+        env["rack.input"].rewind
+      end
+    end
   end
 
   def initialize(ur = {}, *a, &b)

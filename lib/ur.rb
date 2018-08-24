@@ -50,4 +50,14 @@ class Ur
 
   class << self
   end
+
+  def initialize(ur = {}, *a, &b)
+    super(ur, *a, &b)
+    unless instance.respond_to?(:to_hash)
+      raise(TypeError, "expected hash argument. got: #{ur.pretty_inspect.chomp}")
+    end
+    self.request = {} if self.request.nil?
+    self.response = {} if self.response.nil?
+    self.processing = {} if self.processing.nil?
+  end
 end

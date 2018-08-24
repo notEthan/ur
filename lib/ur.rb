@@ -88,6 +88,17 @@ class Ur
         env["rack.input"].rewind
       end
     end
+
+    def from_faraday_request(request_env, logger: nil)
+      Ur.new({}).tap do |ur|
+        ur.processing.begin!
+        ur.bound = 'outbound'
+        ur.request['method'] = request_env[:method].to_s
+        ur.request.headers = request_env[:request_headers]
+        ur.request.uri = request_env[:url].normalize.to_s
+        ur.request.set_body_from_faraday(request_env)
+      end
+    end
   end
 
   def initialize(ur = {}, *a, &b)

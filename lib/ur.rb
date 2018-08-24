@@ -118,4 +118,19 @@ class Ur
       processing.tags = logger.formatter.current_tags.dup
     end
   end
+
+  def with_rack_response(app, env)
+    status, response_headers, response_body = app.call(env)
+
+    response.status = status
+    response.headers = response_headers
+    response.body = response_body.to_enum.to_a.join('')
+
+    response_body_proxy = ::Rack::BodyProxy.new(response_body) do
+      processing.finish!
+
+      yield
+    end
+    [status, response_headers, response_body_proxy]
+  end
 end

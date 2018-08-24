@@ -110,4 +110,10 @@ class Ur
     self.response = {} if self.response.nil?
     self.processing = {} if self.processing.nil?
   end
+
+  def logger=(logger)
+    if logger && logger.formatter.respond_to?(:current_tags)
+      processing.tags = logger.formatter.current_tags.dup
+    end
+  end
 end

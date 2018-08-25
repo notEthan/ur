@@ -20,9 +20,9 @@ module Ur
   autoload :RackMiddleware, 'ur/middleware'
   autoload :Faraday, 'ur/faraday'
 
-  Request = self.schema.properties['request'].jsi_schema_module
-  Response = self.schema.properties['response'].jsi_schema_module
-  Metadata = self.schema.properties['metadata'].jsi_schema_module
+  Request = self.properties['request']
+  Response = self.properties['response']
+  Metadata = self.properties['metadata']
   require 'ur/request'
   require 'ur/response'
   require 'ur/metadata'

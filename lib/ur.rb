@@ -43,6 +43,8 @@ Ur = JSI.class_for_schema({
 class Ur
   VERSION = UR_VERSION
 
+  autoload :RequestAndResponse, 'ur/request_and_response'
+
   Request = JSI.class_for_schema(self.schema['properties']['request'])
   Response = JSI.class_for_schema(self.schema['properties']['response'])
   Processing = JSI.class_for_schema(self.schema['properties']['processing'])

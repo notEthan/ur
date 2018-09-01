@@ -1,6 +1,7 @@
 require "ur/version"
 
 require 'jsi'
+require 'time'
 
 Ur = JSI.class_for_schema({
   id: 'https://schemas.ur.unth.net/ur',

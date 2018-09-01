@@ -5,7 +5,7 @@ require "ur/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "ur"
-  spec.version       = Ur::VERSION
+  spec.version       = UR_VERSION
   spec.authors       = ["Ethan"]
   spec.email         = ["ethan@unth"]
 

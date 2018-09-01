@@ -1,3 +1,1 @@
-module Ur
-  VERSION = "0.0.1"
-end
+UR_VERSION = "0.0.1"

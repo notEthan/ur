@@ -44,6 +44,9 @@ class Ur
   VERSION = UR_VERSION
 
   autoload :RequestAndResponse, 'ur/request_and_response'
+  autoload :Middleware, 'ur/middleware'
+  autoload :FaradayMiddleware, 'ur/middleware'
+  autoload :RackMiddleware, 'ur/middleware'
 
   Request = JSI.class_for_schema(self.schema['properties']['request'])
   Response = JSI.class_for_schema(self.schema['properties']['response'])

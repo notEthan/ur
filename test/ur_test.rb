@@ -1,4 +1,5 @@
 require_relative 'test_helper'
+require 'faraday'
 
 describe 'Ur' do
   it 'has a valid schema' do
@@ -11,5 +12,81 @@ describe 'Ur' do
 
   it 'would prefer not to initialize' do
     assert_raises(TypeError) { Ur.new("hello!") }
+  end
+
+  it 'integrates with rack and faraday middlewares' do
+    rack_app = proc do |env|
+      [200, {'Content-Type' => 'text/plain'}, ['ᚒ']]
+    end
+    called_rack_before_request = false
+    called_rack_after_response = false
+    called_faraday_before_request = false
+    called_faraday_after_response = false
+    rack_app = Ur::RackMiddleware.new(rack_app,
+      before_request: -> (ur) do
+        called_rack_before_request = true
+
+        assert_equal('inbound', ur.bound)
+        assert_equal('GET', ur.request['method'])
+        assert_equal('ur.unth.net', ur.request.headers['host'])
+        assert_equal('bar', ur.request.headers['foo'])
+        assert_equal('https://ur.unth.net/', ur.request.uri)
+        assert(ur.response.empty?)
+        assert_instance_of(Time, ur.processing.began_at)
+        assert_nil(ur.processing.duration)
+        assert(ur.validate)
+      end,
+      after_response: -> (ur) do
+        called_rack_after_response = true
+
+        assert_equal('inbound', ur.bound)
+        assert_equal('GET', ur.request['method'])
+        assert_equal(200, ur.response.status)
+        assert_equal('text/plain', ur.response.headers['Content-Type'])
+        assert_equal('ᚒ', ur.response.body)
+        assert_instance_of(Time, ur.processing.began_at)
+        assert_instance_of(Float, ur.processing.duration)
+        assert_operator(ur.processing.duration, :>, 0)
+        assert(ur.validate)
+      end,
+    )
+    faraday_conn = ::Faraday.new('https://ur.unth.net/') do |builder|
+      builder.use(Ur::FaradayMiddleware,
+        before_request: -> (ur) do
+          called_faraday_before_request = true
+
+          assert_equal('outbound', ur.bound)
+          assert_equal('get', ur.request['method'])
+          assert_equal('bar', ur.request.headers['foo'])
+          assert_equal('https://ur.unth.net/', ur.request.uri)
+          assert_equal(Addressable::URI.parse('https://ur.unth.net/'), ur.request.addressable_uri)
+          assert(ur.response.empty?)
+          assert_instance_of(Time, ur.processing.began_at)
+          assert_nil(ur.processing.duration)
+          assert(ur.validate)
+        end,
+        after_response: -> (ur) do
+          called_faraday_after_response = true
+
+          assert_equal('outbound', ur.bound)
+          assert_equal('get', ur.request['method'])
+          assert_equal(200, ur.response.status)
+          assert_equal('text/plain', ur.response.headers['Content-Type'])
+          assert_equal('ᚒ', ur.response.body)
+          assert_instance_of(Time, ur.processing.began_at)
+          assert_instance_of(Float, ur.processing.duration)
+          assert_operator(ur.processing.duration, :>, 0)
+          assert(ur.validate)
+        end,
+      )
+      builder.use(Faraday::Adapter::Rack, rack_app)
+    end
+    res = faraday_conn.get('/', nil, {'Foo' => 'bar'})
+    assert(called_rack_before_request)
+    assert(called_rack_after_response)
+    assert(called_faraday_before_request)
+    assert(called_faraday_after_response)
+    assert_equal(200, res.status)
+    assert_equal('ᚒ', res.body)
   end
 end

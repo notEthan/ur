@@ -21,6 +21,7 @@ class Ur
     def call(request_env)
       ur = Ur.from_faraday_request(request_env)
       invoke_callback(:before_request, ur)
+      ur.logger = options[:logger] if options[:logger]
       ur.faraday_on_complete(@app, request_env) do |response_env|
         invoke_callback(:after_response, ur)
       end
@@ -32,6 +33,7 @@ class Ur
     def call(env)
       ur = Ur.from_rack_request(env)
       invoke_callback(:before_request, ur)
+      ur.logger = options[:logger] if options[:logger]
       ur.with_rack_response(@app, env) do
         invoke_callback(:after_response, ur)
       end

@@ -1,5 +1,6 @@
 require_relative 'test_helper'
 require 'faraday'
+require 'active_support/tagged_logging'
 
 describe 'Ur' do
   it 'has a valid schema' do
@@ -18,13 +19,17 @@ describe 'Ur' do
     rack_app = proc do |env|
       [200, {'Content-Type' => 'text/plain'}, ['ᚒ']]
     end
+    client_logger = ActiveSupport::TaggedLogging.new(Logger.new(StringIO.new))
+    server_logger = ActiveSupport::TaggedLogging.new(Logger.new(StringIO.new))
     called_rack_before_request = false
     called_rack_after_response = false
     called_faraday_before_request = false
     called_faraday_after_response = false
-    rack_app = Ur::RackMiddleware.new(rack_app,
+    rack_app = Ur::RackMiddleware.new(rack_app, logger: server_logger,
       before_request: -> (ur) do
         called_rack_before_request = true
+
+        server_logger.push_tags 'ur_test_rack'
 
         assert_equal('inbound', ur.bound)
         assert_equal('GET', ur.request['method'])
@@ -39,6 +44,8 @@ describe 'Ur' do
       after_response: -> (ur) do
         called_rack_after_response = true
 
+        server_logger.pop_tags
+
         assert_equal('inbound', ur.bound)
         assert_equal('GET', ur.request['method'])
         assert_equal(200, ur.response.status)
@@ -47,13 +54,16 @@ describe 'Ur' do
         assert_instance_of(Time, ur.processing.began_at)
         assert_instance_of(Float, ur.processing.duration)
         assert_operator(ur.processing.duration, :>, 0)
+        assert_equal(['ur_test_rack'], ur.processing.tags.to_a)
         assert(ur.validate)
       end,
     )
     faraday_conn = ::Faraday.new('https://ur.unth.net/') do |builder|
-      builder.use(Ur::FaradayMiddleware,
+      builder.use(Ur::FaradayMiddleware, logger: client_logger,
         before_request: -> (ur) do
           called_faraday_before_request = true
+
+          client_logger.push_tags 'ur_test_faraday'
 
           assert_equal('outbound', ur.bound)
           assert_equal('get', ur.request['method'])
@@ -68,6 +78,8 @@ describe 'Ur' do
         after_response: -> (ur) do
           called_faraday_after_response = true
 
+          client_logger.pop_tags
+
           assert_equal('outbound', ur.bound)
           assert_equal('get', ur.request['method'])
           assert_equal(200, ur.response.status)
@@ -76,6 +88,7 @@ describe 'Ur' do
           assert_instance_of(Time, ur.processing.began_at)
           assert_instance_of(Float, ur.processing.duration)
           assert_operator(ur.processing.duration, :>, 0)
+          assert_equal(['ur_test_faraday'], ur.processing.tags.to_a)
           assert(ur.validate)
         end,
       )

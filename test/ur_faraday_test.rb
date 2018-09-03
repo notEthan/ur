@@ -19,6 +19,23 @@ describe 'Ur faraday integration' do
     assert_equal('ᚒ', ur.response.body)
     assert(ur.validate)
   end
+  it 'integrates, IO body' do
+    ur = nil
+    faraday_conn = ::Faraday.new('https://ur.unth.net/') do |builder|
+      builder.use(Ur::FaradayMiddleware,
+        after_response: -> (ur_) { ur = ur_ },
+      )
+      builder.use(Faraday::Adapter::Rack, -> (env) { [200, {'Content-Type' => 'text/plain'}, ['☺']] })
+    end
+    res = faraday_conn.post('/', StringIO.new('hello!'))
+    assert_equal('☺', res.body)
+    assert_instance_of(Ur, ur)
+    assert_equal('post', ur.request['method'])
+    assert_equal('hello!', ur.request.body)
+    assert_equal('text/plain', ur.response.headers['Content-Type'])
+    assert_equal('☺', ur.response.body)
+    assert(ur.validate)
+  end
   it 'integrates, faraday middleware munges the json bodies but uses preserve_raw' do
     ur = nil
     faraday_conn = ::Faraday.new('https://ur.unth.net/') do |builder|

@@ -147,4 +147,18 @@ class Ur
       yield(response_env)
     end
   end
+
+  # define delegator sort of methods for nested property names, eg.
+  #    ur.request_uri
+  # this makes it easier to use Symbol#to_proc, eg urs.map(&:request_uri)
+  # instead of urs.map(&:request).map(&:uri)
+  schema['properties'].each do |property_name, property_schema|
+    if property_schema['type'] == 'object' && property_schema['properties']
+      property_schema['properties'].each_key do |property_property_name|
+        define_method("#{property_name}_#{property_property_name}") do
+          self[property_name][property_property_name]
+        end
+      end
+    end
+  end
 end

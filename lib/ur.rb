@@ -162,6 +162,7 @@ class Ur
   schema['properties'].each do |property_name, property_schema|
     if property_schema['type'] == 'object' && property_schema['properties']
       property_schema['properties'].each_key do |property_property_name|
+        # ur.request_method => ur['request']['method']
         define_method("#{property_name}_#{property_property_name}") do
           self[property_name][property_property_name]
         end

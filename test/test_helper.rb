@@ -11,6 +11,9 @@ require 'minitest/reporters'
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 
 class UrSpec < Minitest::Spec
+  def assert_json_equal(exp, act, *a)
+    assert_equal(JSI::Typelike.as_json(exp), JSI::Typelike.as_json(act), *a)
+  end
 end
 
 # register this to be the base class for specs instead of Minitest::Spec

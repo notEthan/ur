@@ -65,7 +65,7 @@ class Ur
         env = request_env
       end
 
-      Ur.new({}).tap do |ur|
+      new({}).tap do |ur|
         ur.processing.begin!
         ur.bound = 'inbound'
         ur.request['method'] = rack_request.request_method
@@ -95,7 +95,7 @@ class Ur
     end
 
     def from_faraday_request(request_env, logger: nil)
-      Ur.new({}).tap do |ur|
+      new({}).tap do |ur|
         ur.processing.begin!
         ur.bound = 'outbound'
         ur.request['method'] = request_env[:method].to_s

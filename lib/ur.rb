@@ -65,9 +65,8 @@ class Ur
         env = request_env
       end
 
-      new({}).tap do |ur|
+      new({'bound' => 'inbound'}).tap do |ur|
         ur.processing.begin!
-        ur.bound = 'inbound'
         ur.request['method'] = rack_request.request_method
         ur.request.headers = env.map do |(key, value)|
           http_match = key.match(/\AHTTP_/)
@@ -95,9 +94,8 @@ class Ur
     end
 
     def from_faraday_request(request_env, logger: nil)
-      new({}).tap do |ur|
+      new({'bound' => 'outbound'}).tap do |ur|
         ur.processing.begin!
-        ur.bound = 'outbound'
         ur.request['method'] = request_env[:method].to_s
         ur.request.headers = request_env[:request_headers]
         ur.request.uri = request_env[:url].normalize.to_s

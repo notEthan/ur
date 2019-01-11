@@ -19,5 +19,21 @@ class Ur
       end
     end
     include FaradayEntity
+
+    def content_type_attrs
+      return @content_type_attrs if instance_variable_defined?(:@content_type_attrs)
+      @content_type_attrs = ContentTypeAttrs.new(content_type)
+    end
+
+    def content_type
+      headers.each do |k, v|
+        return v if k =~ /\Acontent[-_]type\z/i
+      end
+      nil
+    end
+
+    def media_type
+      content_type_attrs.media_type
+    end
   end
 end

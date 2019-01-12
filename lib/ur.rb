@@ -106,8 +106,8 @@ class Ur
     end
   end
 
-  def initialize(ur = {}, *a, &b)
-    super(ur, *a, &b)
+  def initialize(ur = {}, **opt, &b)
+    super(ur, **opt, &b)
     unless instance.respond_to?(:to_hash)
       raise(TypeError, "expected hash argument. got: #{ur.pretty_inspect.chomp}")
     end

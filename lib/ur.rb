@@ -47,6 +47,7 @@ class Ur
   autoload :Middleware, 'ur/middleware'
   autoload :FaradayMiddleware, 'ur/middleware'
   autoload :RackMiddleware, 'ur/middleware'
+  autoload :Faraday, 'ur/faraday'
 
   Request = JSI.class_for_schema(self.schema['properties']['request'])
   Response = JSI.class_for_schema(self.schema['properties']['response'])

@@ -43,6 +43,7 @@ Ur = JSI.class_for_schema({
 class Ur
   VERSION = UR_VERSION
 
+  autoload :SubUr, 'ur/sub_ur'
   autoload :RequestAndResponse, 'ur/request_and_response'
   autoload :Middleware, 'ur/middleware'
   autoload :FaradayMiddleware, 'ur/middleware'

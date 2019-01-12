@@ -3,6 +3,7 @@ require 'ur' unless Object.const_defined?(:Ur)
 class Ur
   class Request
     include RequestAndResponse
+    include SubUr
 
     def addressable_uri
       uri ? Addressable::URI.parse(uri) : nil

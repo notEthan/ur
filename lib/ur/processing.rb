@@ -2,6 +2,8 @@ require 'ur' unless Object.const_defined?(:Ur)
 
 class Ur
   class Processing
+    include SubUr
+
     def began_at
       began_at_s ? Time.parse(began_at_s) : nil
     end

@@ -112,15 +112,17 @@ class Ur
     end
   end
 
-  def initialize(ur = {}, **opt, &b)
+  def initialize(ur = {}, origin: nil, **opt, &b)
     super(ur, **opt, &b)
     unless instance.respond_to?(:to_hash)
       raise(TypeError, "expected hash argument. got: #{ur.pretty_inspect.chomp}")
     end
+    @origin = origin
     self.request = {} if self.request.nil?
     self.response = {} if self.response.nil?
     self.processing = {} if self.processing.nil?
   end
+  attr_reader :origin
 
   def logger=(logger)
     if logger && logger.formatter.respond_to?(:current_tags)

@@ -48,6 +48,7 @@ class Ur
   autoload :Middleware, 'ur/middleware'
   autoload :FaradayMiddleware, 'ur/middleware'
   autoload :RackMiddleware, 'ur/middleware'
+  autoload :Faraday, 'ur/faraday'
 
   Request = JSI.class_for_schema(self.schema['properties']['request'])
   Response = JSI.class_for_schema(self.schema['properties']['response'])
@@ -55,6 +56,8 @@ class Ur
   require 'ur/request'
   require 'ur/response'
   require 'ur/processing'
+
+  autoload :ContentTypeAttrs, 'ur/content_type_attrs'
 
   class << self
     def from_rack_request(request_env)

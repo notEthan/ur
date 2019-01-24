@@ -66,9 +66,8 @@ class Ur
         env = request_env
       end
 
-      Ur.new({}).tap do |ur|
+      new({'bound' => 'inbound'}).tap do |ur|
         ur.processing.begin!
-        ur.bound = 'inbound'
         ur.request['method'] = rack_request.request_method
         ur.request.headers = env.map do |(key, value)|
           http_match = key.match(/\AHTTP_/)
@@ -96,9 +95,8 @@ class Ur
     end
 
     def from_faraday_request(request_env, logger: nil)
-      Ur.new({}).tap do |ur|
+      new({'bound' => 'outbound'}).tap do |ur|
         ur.processing.begin!
-        ur.bound = 'outbound'
         ur.request['method'] = request_env[:method].to_s
         ur.request.headers = request_env[:request_headers]
         ur.request.uri = request_env[:url].normalize.to_s
@@ -147,6 +145,20 @@ class Ur
       processing.finish!
 
       yield(response_env)
+    end
+  end
+
+  # define delegator sort of methods for nested property names, eg.
+  #    ur.request_uri
+  # this makes it easier to use Symbol#to_proc, eg urs.map(&:request_uri)
+  # instead of urs.map(&:request).map(&:uri)
+  schema['properties'].each do |property_name, property_schema|
+    if property_schema['type'] == 'object' && property_schema['properties']
+      property_schema['properties'].each_key do |property_property_name|
+        define_method("#{property_name}_#{property_property_name}") do
+          self[property_name][property_property_name]
+        end
+      end
     end
   end
 end

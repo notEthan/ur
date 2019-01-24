@@ -1,1 +1,1 @@
-UR_VERSION = "0.0.1"
+UR_VERSION = "0.0.2"

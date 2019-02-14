@@ -71,7 +71,17 @@ class Ur
 
       new({'bound' => 'inbound'}).tap do |ur|
         ur.processing.begin!
+
         ur.request['method'] = rack_request.request_method
+
+        ur.request.addressable_uri = Addressable::URI.new(
+          :scheme => rack_request.scheme,
+          :host => rack_request.host,
+          :port => rack_request.port,
+          :path => rack_request.path,
+          :query => (rack_request.query_string unless rack_request.query_string.empty?)
+        )
+
         ur.request.headers = env.map do |(key, value)|
           http_match = key.match(/\AHTTP_/)
           if http_match
@@ -84,13 +94,7 @@ class Ur
             end
           end
         end.compact.inject({}, &:update)
-        ur.request.addressable_uri = Addressable::URI.new(
-          :scheme => rack_request.scheme,
-          :host => rack_request.host,
-          :port => rack_request.port,
-          :path => rack_request.path,
-          :query => (rack_request.query_string unless rack_request.query_string.empty?)
-        )
+
         env["rack.input"].rewind
         ur.request.body = env["rack.input"].read
         env["rack.input"].rewind
@@ -101,8 +105,8 @@ class Ur
       new({'bound' => 'outbound'}).tap do |ur|
         ur.processing.begin!
         ur.request['method'] = request_env[:method].to_s
-        ur.request.headers = request_env[:request_headers]
         ur.request.uri = request_env[:url].normalize.to_s
+        ur.request.headers = request_env[:request_headers]
         ur.request.set_body_from_faraday(request_env)
       end
     end

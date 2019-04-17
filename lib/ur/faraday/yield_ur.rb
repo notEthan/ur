@@ -10,7 +10,7 @@ class Ur
       end
 
       def call(request_env)
-        ur = Scorpio::Ur.from_faraday_request(request_env)
+        ur = (@options[:ur_class] || Ur).from_faraday_request(request_env)
         ur.logger = @options[:logger]
         ur.faraday_on_complete(@app, request_env) do |response_env|
           @yield_to.call(ur)

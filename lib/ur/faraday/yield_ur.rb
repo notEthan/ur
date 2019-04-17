@@ -2,6 +2,8 @@ class Ur
   module Faraday
     class YieldUr < ::Faraday::Middleware
       def initialize(app, options = {}, &block)
+        raise(ArgumentError, "no block given to yield ur") unless block
+        raise(TypeError, "options must be a Hash") unless options.respond_to?(:to_hash)
         @app = app
         @options = options
         @yield_to = block

@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "jsi", "~> 0.0.3"
+  spec.add_dependency "jsi", "~> 0.1.0"
   spec.add_dependency "addressable", "~> 2.0"
   spec.add_development_dependency "rack"
   spec.add_development_dependency "rack-test"

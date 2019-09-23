@@ -109,7 +109,6 @@ class Ur
   end
 
   def initialize(ur = {}, **opt, &b)
-    ur = JSI::JSON::Node.new_doc(ur) unless ur.is_a?(JSI::JSON::Node)
     super(ur, **opt, &b)
     unless instance.respond_to?(:to_hash)
       raise(TypeError, "expected hash argument. got: #{ur.pretty_inspect.chomp}")

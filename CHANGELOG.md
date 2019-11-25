@@ -1,3 +1,6 @@
+# v0.0.3
+- bump JSI version
+
 # v0.0.2
 
 - module SubUr common to Ur::Request, Response, Processing

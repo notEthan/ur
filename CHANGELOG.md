@@ -1,5 +1,8 @@
+# v0.0.4
+- bump JSI v0.2.0
+
 # v0.0.3
-- bump JSI version
+- bump JSI v0.1.0
 
 # v0.0.2
 

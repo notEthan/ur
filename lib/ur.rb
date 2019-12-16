@@ -58,6 +58,7 @@ class Ur
   require 'ur/processing'
 
   autoload :ContentTypeAttrs, 'ur/content_type_attrs'
+  autoload :ContentType, 'ur/content_type'
 
   class << self
     def from_rack_request(request_env)

@@ -14,6 +14,11 @@ class UrSpec < Minitest::Spec
   def assert_json_equal(exp, act, *a)
     assert_equal(JSI::Typelike.as_json(exp), JSI::Typelike.as_json(act), *a)
   end
+
+  def assert_equal exp, act, msg = nil
+    msg = message(msg, E) { diff exp, act }
+    assert exp == act, msg
+  end
 end
 
 # register this to be the base class for specs instead of Minitest::Spec

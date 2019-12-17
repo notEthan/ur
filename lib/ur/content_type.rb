@@ -156,6 +156,21 @@ class Ur
       suffix && suffix.casecmp?(other_suffix)
     end
 
+    # @return [Boolean] is this a JSON content type?
+    def json?
+      suffix ? suffix.casecmp?('json') : subtype ? subtype.casecmp?('json') : false
+    end
+
+    # @return [Boolean] is this an XML content type?
+    def xml?
+      suffix ? suffix.casecmp?('xml'): subtype ? subtype.casecmp?('xml') : false
+    end
+
+    # @return [Boolean] is this a x-www-form-urlencoded content type?
+    def form_urlencoded?
+      suffix ? suffix.casecmp?('x-www-form-urlencoded'): subtype ? subtype.casecmp?('x-www-form-urlencoded') : false
+    end
+
     # @return [Boolean] is the 'type' portion of our media type 'text'
     def type_text?
       type && type.casecmp?('text')

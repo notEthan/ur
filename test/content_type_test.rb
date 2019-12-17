@@ -11,6 +11,7 @@ describe 'Ur::ContentType' do
 
       assert_equal('application', content_type.type)
       assert(content_type.type?('Application'))
+      assert(content_type.type_application?)
 
       assert_equal('vnd.github+json', content_type.subtype)
       assert_equal('vnd', content_type.facet)

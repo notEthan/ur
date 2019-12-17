@@ -155,5 +155,40 @@ class Ur
     def suffix?(other_suffix)
       suffix && suffix.casecmp?(other_suffix)
     end
+
+    # @return [Boolean] is the 'type' portion of our media type 'text'
+    def type_text?
+      type && type.casecmp?('text')
+    end
+
+    # @return [Boolean] is the 'type' portion of our media type 'image'
+    def type_image?
+      type && type.casecmp?('image')
+    end
+
+    # @return [Boolean] is the 'type' portion of our media type 'audio'
+    def type_audio?
+      type && type.casecmp?('audio')
+    end
+
+    # @return [Boolean] is the 'type' portion of our media type 'video'
+    def type_video?
+      type && type.casecmp?('video')
+    end
+
+    # @return [Boolean] is the 'type' portion of our media type 'application'
+    def type_application?
+      type && type.casecmp?('application')
+    end
+
+    # @return [Boolean] is the 'type' portion of our media type 'message'
+    def type_message?
+      type && type.casecmp?('message')
+    end
+
+    # @return [Boolean] is the 'type' portion of our media type 'multipart'
+    def type_multipart?
+      type && type.casecmp?('multipart')
+    end
   end
 end

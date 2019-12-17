@@ -138,5 +138,23 @@ class Ur
     def parameters_parsed?
       @parameters_parsed
     end
+
+    # @param other_type
+    # @return [Boolean] is the 'type' portion of our media type equal (case-insensitive) to the given other_type
+    def type?(other_type)
+      type && type.casecmp?(other_type)
+    end
+
+    # @param other_subtype
+    # @return [Boolean] is the 'subtype' portion of our media type equal (case-insensitive) to the given other_subtype
+    def subtype?(other_subtype)
+      subtype && subtype.casecmp?(other_subtype)
+    end
+
+    # @param other_suffix
+    # @return [Boolean] is the 'suffix' portion of our media type equal (case-insensitive) to the given other_suffix
+    def suffix?(other_suffix)
+      suffix && suffix.casecmp?(other_suffix)
+    end
   end
 end

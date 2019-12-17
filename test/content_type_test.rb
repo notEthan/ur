@@ -74,6 +74,34 @@ describe 'Ur::ContentType' do
       assert_equal({'charset' => 'utf-8'}, content_type.parameters)
       assert_equal('utf-8', content_type.parameters['CharSet'])
     end
+    describe('[invalid] quote in type') do
+      let(:content_type_str) { 'applic"ation/foo; foo=bar' }
+      it('gives up') do
+        assert_equal('applic', content_type.type)
+        assert_equal(nil, content_type.subtype)
+      end
+    end
+    describe('[invalid] backslash in type') do
+      let(:content_type_str) { 'applicati\on/foo; foo=bar' }
+      it('parses') do
+        assert_equal('applicati\\on', content_type.type)
+        assert_equal('foo', content_type.subtype)
+      end
+    end
+    describe('[invalid] quote in subtype') do
+      let(:content_type_str) { 'application/f"oo; foo=bar' }
+      it('gives up') do
+        assert_equal('application', content_type.type)
+        assert_equal('f', content_type.subtype)
+      end
+    end
+    describe('[invalid] backslash in subtype') do
+      let(:content_type_str) { 'application/fo\\o; foo=bar' }
+      it('parses') do
+        assert_equal('application', content_type.type)
+        assert_equal('fo\\o', content_type.subtype)
+      end
+    end
   end
   describe 'parameters' do
     describe 'basic usage' do

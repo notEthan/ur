@@ -75,4 +75,118 @@ describe 'Ur::ContentType' do
       assert_equal('utf-8', content_type.parameters['CharSet'])
     end
   end
+  describe 'parameters' do
+    describe 'basic usage' do
+      let(:content_type_str) { 'application/foo; charset="utf-8"; foo=bar' }
+      it('parses') do
+        assert_equal({'charset' => 'utf-8', 'foo' => 'bar'}, content_type.parameters)
+      end
+    end
+    describe 'params with capitalization' do
+      let(:content_type_str) { 'application/foo; Charset="utf-8"; FOO=bar' }
+      it('parses') do
+        assert_equal({'charset' => 'utf-8', 'foo' => 'bar'}, content_type.parameters)
+        assert_equal('utf-8', content_type.parameters['CharSet'])
+        assert_equal('utf-8', content_type.parameters['Charset'])
+        assert_equal('bar', content_type.parameters['foo'])
+        assert_equal('bar', content_type.parameters['FOO'])
+      end
+    end
+    describe 'repeated params' do
+      let(:content_type_str) { 'application/foo; foo="first"; foo=second' }
+      it('will just overwrite') do
+        assert_equal({'foo' => 'second'}, content_type.parameters)
+      end
+    end
+    describe 'repeated params, different capitalization' do
+      let(:content_type_str) { 'application/foo; FOO=first; Foo=second' }
+      it('will just overwrite') do
+        assert_equal({'foo' => 'second'}, content_type.parameters)
+      end
+    end
+    describe 'empty strings' do
+      let(:content_type_str) { 'application/foo; empty1=; empty2=""' }
+      it('parses') do
+        assert_equal({'empty1' => '', 'empty2' => ''}, content_type.parameters)
+      end
+    end
+    describe 'empty strings with whitespace' do
+      let(:content_type_str) { 'application/foo; empty1=  ; empty2=""   ' }
+      it('parses') do
+        assert_equal({'empty1' => '', 'empty2' => ''}, content_type.parameters)
+      end
+    end
+    describe('[invalid] opening quote only') do
+      let(:content_type_str) { 'application/foo; foo=1; bar="' }
+      it('parses') do
+        assert_equal({'foo' => '1', 'bar' => ''}, content_type.parameters)
+      end
+    end
+    describe('[invalid] backlash with no character') do
+      let(:content_type_str) { 'application/foo; foo=1; bar="\\' }
+      it('parses') do
+        assert_equal({'foo' => '1', 'bar' => ''}, content_type.parameters)
+      end
+    end
+    describe('[invalid] extra following quoted string') do
+      let(:content_type_str) { 'application/foo; foo="1" 2; bar=3' }
+      it('sorta parses') do
+        assert_equal({'foo' => '1 2', 'bar' => '3'}, content_type.parameters)
+      end
+    end
+    describe('[invalid] quotes silliness') do
+      let(:content_type_str) { 'application/foo; foo="1" 2 "3 4" "5 "  ; bar=3' }
+      it('sorta parses') do
+        assert_equal({'foo' => '1 2 3 4 5 ', 'bar' => '3'}, content_type.parameters)
+      end
+    end
+    describe('[invalid] backlash quote') do
+      let(:content_type_str) { 'application/foo; foo=1; bar="\\"' }
+      it('parses') do
+        assert_equal({'foo' => '1', 'bar' => '"'}, content_type.parameters)
+      end
+    end
+    describe('[invalid] trailing ;') do
+      let(:content_type_str) { 'application/foo; foo=bar;' }
+      it('parses') do
+        assert_equal({'foo' => 'bar'}, content_type.parameters)
+      end
+    end
+    describe('[invalid] extra ; inline') do
+      let(:content_type_str) { 'application/foo; ; ; foo=bar' }
+      it('parses') do
+        assert_equal({'foo' => 'bar'}, content_type.parameters)
+      end
+    end
+    describe('[invalid] whitespace around the =') do
+      let(:content_type_str) { 'application/foo; foo = bar; baz = qux' }
+      it('parses') do
+        assert_equal({'foo ' => ' bar', 'baz ' => ' qux'}, content_type.parameters)
+      end
+    end
+    describe('whitespace before the ;') do
+      let(:content_type_str) { 'application/foo; foo=bar ; baz=qux' }
+      it('parses') do
+        assert_equal({'foo' => 'bar', 'baz' => 'qux'}, content_type.parameters)
+      end
+    end
+    describe('no media_type') do
+      let(:content_type_str) { '; foo=bar' }
+      it('parses') do
+        assert_equal({'foo' => 'bar'}, content_type.parameters)
+      end
+    end
+    describe('[invalid] quote in parameter name') do
+      let(:content_type_str) { 'application/foo; fo"o=bar' }
+      it('gives up') do
+        assert_equal({}, content_type.parameters)
+      end
+    end
+    describe('[invalid] backslash in parameter name') do
+      let(:content_type_str) { 'application/foo; fo\\o=bar' }
+      it('parses') do
+        assert_equal({'fo\\o' => 'bar'}, content_type.parameters)
+      end
+    end
+  end
 end

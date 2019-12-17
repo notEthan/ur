@@ -84,25 +84,29 @@ class Ur
         end
       end
 
-      @parameters_parsed = catch(:parse_success) do
-        while scanner.scan(/;\s*(?<key>[^=;\"]+)=/)
-          key = scanner[:key]
-          if scanner.scan(/"/)
-            value = String.new
-            until scanner.scan(/"/)
-              if scanner.scan(/\\/)
-                throw(:parse_success, false) if scanner.eos?
-                value << scanner.getch
+      while scanner.scan(/(;\s*)+/)
+        key = scanner.scan(/[^;=\"]*/)
+        if key && scanner.scan(/=/)
+          value = String.new
+          until scanner.eos? || scanner.check(/;/)
+            if scanner.scan(/\s+/)
+              ws = scanner[0]
+              # discard trailing whitespace.
+              # other whitespace isn't technically valid but we are permissive so we put it in the value.
+              value << ws unless scanner.eos? || scanner.check(/;/)
+            elsif scanner.scan(/"/)
+              until scanner.eos? || scanner.scan(/"/)
+                if scanner.scan(/\\/)
+                  value << scanner.getch unless scanner.eos?
+                end
+                value << scanner.scan(/[^\"\\]*/)
               end
-              value << scanner.scan(/[^\"\\]*/)
-              throw(:parse_success, false) if scanner.eos?
+            else
+              value << scanner.scan(/[^\s;\"]*/)
             end
-          else
-            value = scanner.scan(/[^;]*/)
           end
-          @parameters[key.freeze] = value.freeze
+          @parameters[key.downcase.freeze] = value.freeze
         end
-        throw(:parse_success, scanner.eos?)
       end
 
       @parameters.freeze
@@ -133,11 +137,6 @@ class Ur
     # @return [Hash<String, String>] parameters of this content type.
     #   e.g. {"charset" => "utf-8"} in content-type: application/vnd.github+json; charset="utf-8"
     attr_reader :parameters
-
-    # @return [Boolean] whether the parameters were parsed successfully
-    def parameters_parsed?
-      @parameters_parsed
-    end
 
     # @param other_type
     # @return [Boolean] is the 'type' portion of our media type equal (case-insensitive) to the given other_type

@@ -156,6 +156,40 @@ class Ur
       suffix && suffix.casecmp?(other_suffix)
     end
 
+    SOME_TEXT_SUBTYPES = %w(
+      x-www-form-urlencoded
+      json
+      json-seq
+      jwt
+      jose
+      yaml
+      x-yaml
+      xml
+      html
+      css
+      javascript
+      ecmascript
+    ).map(&:freeze).freeze
+
+    # @param unknown [Boolean] return this value when we have no idea whether
+    #   our media type is binary or text.
+    # @return [Boolean] does this content type appear to be binary?
+    #   this library makes its best guess based on a very incomplete knowledge
+    #   of which media types indicate binary or text.
+    def binary?(unknown: true)
+      return false if type_text?
+
+      SOME_TEXT_SUBTYPES.each do |cmpsubtype|
+        return false if (suffix ? suffix.casecmp?(cmpsubtype) : subtype ? subtype.casecmp?(cmpsubtype) : false)
+      end
+
+      # these are generally binary
+      return true if type_image? || type_audio? || type_video?
+
+      # we're out of ideas
+      return unknown
+    end
+
     # @return [Boolean] is this a JSON content type?
     def json?
       suffix ? suffix.casecmp?('json') : subtype ? subtype.casecmp?('json') : false

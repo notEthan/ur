@@ -217,6 +217,50 @@ describe 'Ur::ContentType' do
       end
     end
   end
+  describe 'binary?' do
+    binary_content_type_strs = [
+      'audio/ogg',
+      'Audio/OGG; foo=bar',
+      'VIDEO/foo+bar',
+    ]
+    binary_content_type_strs.each do |binary_content_type_str|
+      describe(binary_content_type_str) do
+        let(:content_type_str) { binary_content_type_str }
+        it 'is binary' do
+          assert(content_type.binary?(unknown: false))
+        end
+      end
+    end
+    not_binary_content_type_strs = [
+      'text/anything',
+      'TEXT/plain; charset=foo',
+      'application/JSON',
+      'media/foo+Json; foo="bar"',
+    ]
+    not_binary_content_type_strs.each do |not_binary_content_type_str|
+      describe(not_binary_content_type_str) do
+        let(:content_type_str) { not_binary_content_type_str }
+        it 'is not binary' do
+          assert(!content_type.binary?(unknown: true))
+        end
+      end
+    end
+    unknown_content_type_strs = [
+      'foo',
+      'foo/bar; note="not application/json"',
+      'application/jsonisnotthis',
+      'application/octet-stream',
+    ]
+    unknown_content_type_strs.each do |unknown_content_type_str|
+      describe(unknown_content_type_str) do
+        let(:content_type_str) { unknown_content_type_str }
+        it 'is unknown' do
+          assert(content_type.binary?(unknown: true))
+          assert(!content_type.binary?(unknown: false))
+        end
+      end
+    end
+  end
   describe 'json?' do
     json_content_type_strs = [
       'application/json',

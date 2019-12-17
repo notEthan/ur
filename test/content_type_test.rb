@@ -217,4 +217,82 @@ describe 'Ur::ContentType' do
       end
     end
   end
+  describe 'json?' do
+    json_content_type_strs = [
+      'application/json',
+      'Application/Json; charset=EBCDIC',
+      'Text/json',
+      'MEDIA/JSON',
+      'media/foo.bar+json',
+      'media/foo.bar+json; foo=',
+    ]
+    json_content_type_strs.each do |json_content_type_str|
+      describe(json_content_type_str) do
+        let(:content_type_str) { json_content_type_str }
+        it 'is json' do
+          assert(content_type.json?)
+        end
+      end
+    end
+    not_json_content_type_strs = [
+      'json',
+      'foo/bar; note="not application/json"',
+      'application/jsonisnotthis',
+      'text/json+xml', # I don't even know what I'm trying for here
+    ]
+    not_json_content_type_strs.each do |not_json_content_type_str|
+      describe(not_json_content_type_str) do
+        let(:content_type_str) { not_json_content_type_str }
+        it 'is not json' do
+          assert(!content_type.json?)
+        end
+      end
+    end
+  end
+  describe 'xml?' do
+    xml_content_type_strs = [
+      'application/xml',
+      'Application/Xml; charset=EBCDIC',
+      'Text/xml',
+      'MEDIA/XML',
+      'media/foo.bar+xml',
+      'media/foo.bar+xml; foo=',
+    ]
+    xml_content_type_strs.each do |xml_content_type_str|
+      describe(xml_content_type_str) do
+        let(:content_type_str) { xml_content_type_str }
+        it 'is xml' do
+          assert(content_type.xml?)
+        end
+      end
+    end
+    not_xml_content_type_strs = [
+      'xml',
+      'foo/bar; note="not application/xml"',
+      'application/xmlisnotthis',
+      'text/xml+json', # I don't even know what I'm trying for here
+    ]
+    not_xml_content_type_strs.each do |not_xml_content_type_str|
+      describe(not_xml_content_type_str) do
+        let(:content_type_str) { not_xml_content_type_str }
+        it 'is not xml' do
+          assert(!content_type.xml?)
+        end
+      end
+    end
+  end
+  describe 'form_urlencoded?' do
+    describe('application/x-www-form-urlencoded') do
+      let(:content_type_str) { 'application/x-www-form-urlencoded' }
+      it 'is form_urlencoded' do
+        assert(content_type.form_urlencoded?)
+      end
+    end
+    describe('application/foo') do
+      let(:content_type_str) { 'application/foo' }
+      it 'is not form_urlencoded' do
+        assert(!content_type.form_urlencoded?)
+      end
+    end
+  end
 end

@@ -35,5 +35,20 @@ class Ur
     def media_type
       content_type ? content_type.media_type : nil
     end
+
+    # @return [Boolean] is our content type JSON?
+    def json?
+      content_type && content_type.json?
+    end
+
+    # @return [Boolean] is our content type XML?
+    def xml?
+      content_type && content_type.json?
+    end
+
+    # @return [Boolean] is our content type x-www-form-urlencoded?
+    def form_urlencoded?
+      content_type && content_type.form_urlencoded?
+    end
   end
 end

@@ -3,43 +3,10 @@ require "ur/version"
 require 'jsi'
 require 'time'
 require 'addressable/uri'
+require 'pathname'
 
-Ur = JSI.class_for_schema({
-  id: 'https://schemas.ur.unth.net/ur',
-  type: 'object',
-  properties: {
-    bound: {
-      type: 'string',
-      description: %q([rfc2616] Inbound and outbound refer to the request and response paths for messages: "inbound" means "traveling toward the origin server", and "outbound" means "traveling toward the user agent"),
-      enum: ['inbound', 'outbound'],
-    },
-    request: {
-      type: 'object',
-      properties: {
-        method: {type: 'string', description: 'HTTP ', example: 'POST'},
-        uri: {type: 'string', example: 'https://example.com/foo?bar=baz'},
-        headers: {type: 'object'},
-        body: {type: 'string'},
-      },
-    },
-    response: {
-      type: 'object',
-      properties: {
-        status: {type: 'integer', example: 200},
-        headers: {type: 'object'},
-        body: {type: 'string'},
-      },
-    },
-    processing: {
-      type: 'object',
-      properties: {
-        began_at_s: {type: 'string'},
-        duration: {type: 'number'},
-        tags: {type: 'array', items: {type: 'string'}}
-      },
-    },
-  },
-})
+UR_ROOT = Pathname.new(__FILE__).dirname.parent.expand_path
+Ur = JSI.class_for_schema(YAML.load_file(UR_ROOT.join('resources/ur.schema.yml')))
 class Ur
   VERSION = UR_VERSION
 

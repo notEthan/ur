@@ -19,10 +19,10 @@ class Ur
 
   Request = JSI.class_for_schema(self.schema['properties']['request'])
   Response = JSI.class_for_schema(self.schema['properties']['response'])
-  Processing = JSI.class_for_schema(self.schema['properties']['processing'])
+  Metadata = JSI.class_for_schema(self.schema['properties']['metadata'])
   require 'ur/request'
   require 'ur/response'
-  require 'ur/processing'
+  require 'ur/metadata'
 
   autoload :ContentTypeAttrs, 'ur/content_type_attrs'
 
@@ -37,7 +37,7 @@ class Ur
       end
 
       new({'bound' => 'inbound'}).tap do |ur|
-        ur.processing.begin!
+        ur.metadata.begin!
 
         ur.request['method'] = rack_request.request_method
 
@@ -70,7 +70,7 @@ class Ur
 
     def from_faraday_request(request_env, logger: nil)
       new({'bound' => 'outbound'}).tap do |ur|
-        ur.processing.begin!
+        ur.metadata.begin!
         ur.request['method'] = request_env[:method].to_s
         ur.request.uri = request_env[:url].normalize.to_s
         ur.request.headers = request_env[:request_headers]
@@ -86,12 +86,12 @@ class Ur
     end
     self.request = {} if self.request.nil?
     self.response = {} if self.response.nil?
-    self.processing = {} if self.processing.nil?
+    self.metadata = {} if self.metadata.nil?
   end
 
   def logger=(logger)
     if logger && logger.formatter.respond_to?(:current_tags)
-      processing.tags = logger.formatter.current_tags.dup
+      metadata.tags = logger.formatter.current_tags.dup
     end
   end
 
@@ -103,7 +103,7 @@ class Ur
     response.body = response_body.to_enum.to_a.join('')
 
     response_body_proxy = ::Rack::BodyProxy.new(response_body) do
-      processing.finish!
+      metadata.finish!
 
       yield
     end
@@ -115,7 +115,7 @@ class Ur
       response.status = response_env[:status]
       response.headers = response_env[:response_headers]
       response.set_body_from_faraday(response_env)
-      processing.finish!
+      metadata.finish!
 
       yield(response_env)
     end

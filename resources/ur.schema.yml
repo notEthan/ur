@@ -32,7 +32,7 @@ properties:
         type: object
       body:
         type: string
-  processing:
+  metadata:
     type: object
     properties:
       began_at_s:

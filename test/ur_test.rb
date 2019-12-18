@@ -37,8 +37,8 @@ describe 'Ur' do
         assert_equal('bar', ur.request.headers['foo'])
         assert_equal('https://ur.unth.net/', ur.request.uri)
         assert(ur.response.empty?)
-        assert_instance_of(Time, ur.processing.began_at)
-        assert_nil(ur.processing.duration)
+        assert_instance_of(Time, ur.metadata.began_at)
+        assert_nil(ur.metadata.duration)
         assert(ur.validate)
       end,
       after_response: -> (ur) do
@@ -51,10 +51,10 @@ describe 'Ur' do
         assert_equal(200, ur.response.status)
         assert_equal('text/plain', ur.response.headers['Content-Type'])
         assert_equal('ᚒ', ur.response.body)
-        assert_instance_of(Time, ur.processing.began_at)
-        assert_instance_of(Float, ur.processing.duration)
-        assert_operator(ur.processing.duration, :>, 0)
-        assert_equal(['ur_test_rack'], ur.processing.tags.to_a)
+        assert_instance_of(Time, ur.metadata.began_at)
+        assert_instance_of(Float, ur.metadata.duration)
+        assert_operator(ur.metadata.duration, :>, 0)
+        assert_equal(['ur_test_rack'], ur.metadata.tags.to_a)
         assert(ur.validate)
       end,
     )
@@ -71,8 +71,8 @@ describe 'Ur' do
           assert_equal('https://ur.unth.net/', ur.request.uri)
           assert_equal(Addressable::URI.parse('https://ur.unth.net/'), ur.request.addressable_uri)
           assert(ur.response.empty?)
-          assert_instance_of(Time, ur.processing.began_at)
-          assert_nil(ur.processing.duration)
+          assert_instance_of(Time, ur.metadata.began_at)
+          assert_nil(ur.metadata.duration)
           assert(ur.validate)
         end,
         after_response: -> (ur) do
@@ -85,10 +85,10 @@ describe 'Ur' do
           assert_equal(200, ur.response.status)
           assert_equal('text/plain', ur.response.headers['Content-Type'])
           assert_equal('ᚒ', ur.response.body)
-          assert_instance_of(Time, ur.processing.began_at)
-          assert_instance_of(Float, ur.processing.duration)
-          assert_operator(ur.processing.duration, :>, 0)
-          assert_equal(['ur_test_faraday'], ur.processing.tags.to_a)
+          assert_instance_of(Time, ur.metadata.began_at)
+          assert_instance_of(Float, ur.metadata.duration)
+          assert_operator(ur.metadata.duration, :>, 0)
+          assert_equal(['ur_test_faraday'], ur.metadata.tags.to_a)
           assert(ur.validate)
         end,
       )

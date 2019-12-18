@@ -27,13 +27,13 @@ class Ur
 
     def content_type
       headers.each do |k, v|
-        return v if k =~ /\Acontent[-_]type\z/i
+        return ContentType.new(v) if k =~ /\Acontent[-_]type\z/i
       end
       nil
     end
 
     def media_type
-      content_type_attrs.media_type
+      content_type ? content_type.media_type : nil
     end
   end
 end

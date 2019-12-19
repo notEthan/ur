@@ -1,0 +1,45 @@
+id: https://schemas.ur.unth.net/ur
+type: object
+properties:
+  bound:
+    type: string
+    description: '[rfc2616] Inbound and outbound refer to the request and response paths for messages: "inbound" means "traveling toward the origin server", and "outbound" means "traveling toward the user agent"'
+    enum:
+    - inbound
+    - outbound
+  request:
+    type: object
+    properties:
+      method:
+        type: string
+        description: '[rfc2616] The Method token indicates the method to be performed on the resource identified by the Request-URI.'
+        example: POST
+      uri:
+        type: string
+        format: uri
+        example: https://example.com/foo?bar=baz
+      headers:
+        type: object
+      body:
+        type: string
+  response:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 200
+      headers:
+        type: object
+      body:
+        type: string
+  metadata:
+    type: object
+    properties:
+      began_at_s:
+        type: string
+      duration:
+        type: number
+      tags:
+        type: array
+        items:
+          type: string

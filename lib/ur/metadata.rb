@@ -1,7 +1,7 @@
 require 'ur' unless Object.const_defined?(:Ur)
 
 class Ur
-  class Processing
+  class Metadata
     include SubUr
 
     def began_at

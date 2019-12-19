@@ -4,13 +4,13 @@ Ur: Unified Request/Response Representation in Ruby
 
 ## Properties
 
-An ur primarily consists of a request, a response, and additional processing information.
+An ur primarily consists of a request, a response, and additional metadata.
 
 The request consists of the request method, uri, headers, and body.
 
 The response consists of the response status, headers, and body.
 
-The processing information consists of the time the request began, the duration of the request, or tag strings. This is optional.
+The metadata consist of the time the request began, the duration of the request, or tag strings. This is optional.
 
 Other attributes may be present, and are ignored by this library.
 

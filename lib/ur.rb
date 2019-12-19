@@ -3,43 +3,10 @@ require "ur/version"
 require 'jsi'
 require 'time'
 require 'addressable/uri'
+require 'pathname'
 
-Ur = JSI.class_for_schema({
-  id: 'https://schemas.ur.unth.net/ur',
-  type: 'object',
-  properties: {
-    bound: {
-      type: 'string',
-      description: %q([rfc2616] Inbound and outbound refer to the request and response paths for messages: "inbound" means "traveling toward the origin server", and "outbound" means "traveling toward the user agent"),
-      enum: ['inbound', 'outbound'],
-    },
-    request: {
-      type: 'object',
-      properties: {
-        method: {type: 'string', description: 'HTTP ', example: 'POST'},
-        uri: {type: 'string', example: 'https://example.com/foo?bar=baz'},
-        headers: {type: 'object'},
-        body: {type: 'string'},
-      },
-    },
-    response: {
-      type: 'object',
-      properties: {
-        status: {type: 'integer', example: 200},
-        headers: {type: 'object'},
-        body: {type: 'string'},
-      },
-    },
-    processing: {
-      type: 'object',
-      properties: {
-        began_at_s: {type: 'string'},
-        duration: {type: 'number'},
-        tags: {type: 'array', items: {type: 'string'}}
-      },
-    },
-  },
-})
+UR_ROOT = Pathname.new(__FILE__).dirname.parent.expand_path
+Ur = JSI.class_for_schema(YAML.load_file(UR_ROOT.join('resources/ur.schema.yml')))
 class Ur
   VERSION = UR_VERSION
 
@@ -52,10 +19,10 @@ class Ur
 
   Request = JSI.class_for_schema(self.schema['properties']['request'])
   Response = JSI.class_for_schema(self.schema['properties']['response'])
-  Processing = JSI.class_for_schema(self.schema['properties']['processing'])
+  Metadata = JSI.class_for_schema(self.schema['properties']['metadata'])
   require 'ur/request'
   require 'ur/response'
-  require 'ur/processing'
+  require 'ur/metadata'
 
   autoload :ContentType, 'ur/content_type'
 
@@ -70,7 +37,7 @@ class Ur
       end
 
       new({'bound' => 'inbound'}).tap do |ur|
-        ur.processing.begin!
+        ur.metadata.begin!
 
         ur.request['method'] = rack_request.request_method
 
@@ -103,7 +70,7 @@ class Ur
 
     def from_faraday_request(request_env, logger: nil)
       new({'bound' => 'outbound'}).tap do |ur|
-        ur.processing.begin!
+        ur.metadata.begin!
         ur.request['method'] = request_env[:method].to_s
         ur.request.uri = request_env[:url].normalize.to_s
         ur.request.headers = request_env[:request_headers]
@@ -119,12 +86,12 @@ class Ur
     end
     self.request = {} if self.request.nil?
     self.response = {} if self.response.nil?
-    self.processing = {} if self.processing.nil?
+    self.metadata = {} if self.metadata.nil?
   end
 
   def logger=(logger)
     if logger && logger.formatter.respond_to?(:current_tags)
-      processing.tags = logger.formatter.current_tags.dup
+      metadata.tags = logger.formatter.current_tags.dup
     end
   end
 
@@ -136,7 +103,7 @@ class Ur
     response.body = response_body.to_enum.to_a.join('')
 
     response_body_proxy = ::Rack::BodyProxy.new(response_body) do
-      processing.finish!
+      metadata.finish!
 
       yield
     end
@@ -148,7 +115,7 @@ class Ur
       response.status = response_env[:status]
       response.headers = response_env[:response_headers]
       response.set_body_from_faraday(response_env)
-      processing.finish!
+      metadata.finish!
 
       yield(response_env)
     end

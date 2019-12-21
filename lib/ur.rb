@@ -68,7 +68,7 @@ class Ur
       end
     end
 
-    def from_faraday_request(request_env, logger: nil)
+    def from_faraday_request(request_env)
       new({'bound' => 'outbound'}).tap do |ur|
         ur.metadata.begin!
         ur.request['method'] = request_env[:method].to_s
@@ -89,7 +89,11 @@ class Ur
     self.metadata = {} if self.metadata.nil?
   end
 
-  def logger=(logger)
+  # Ur#logger_tags applies tags from a tagged logger to this ur's metadata.
+  # note: ur does not log anything and this logger is not stored.
+  # @param [logger] a tagged logger
+  # @return [void]
+  def logger_tags(logger)
     if logger && logger.formatter.respond_to?(:current_tags)
       metadata.tags = logger.formatter.current_tags.dup
     end

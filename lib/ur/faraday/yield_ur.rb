@@ -11,7 +11,7 @@ class Ur
 
       def call(request_env)
         ur = (@options[:ur_class] || Ur).from_faraday_request(request_env)
-        ur.logger = @options[:logger] if @options[:logger]
+        ur.logger_tags(@options[:logger])
         ur.faraday_on_complete(@app, request_env) do |response_env|
           @yield_to.call(ur)
         end

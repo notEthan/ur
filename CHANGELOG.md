@@ -1,3 +1,7 @@
+# v0.1.0
+- rename processing to metadata
+- Ur::ContentType
+
 # v0.0.4
 - bump JSI v0.2.0
 

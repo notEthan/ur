@@ -38,7 +38,7 @@ class Ur
 
     # @return [Boolean] is our content type XML?
     def xml?
-      content_type && content_type.json?
+      content_type && content_type.xml?
     end
 
     # @return [Boolean] is our content type x-www-form-urlencoded?

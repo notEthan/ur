@@ -1,4 +1,4 @@
-id: https://schemas.ur.unth.net/ur
+$id: https://schemas.ur.unth.net/ur
 type: object
 properties:
   bound:

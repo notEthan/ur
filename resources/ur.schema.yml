@@ -27,6 +27,10 @@ properties:
     properties:
       status:
         type: integer
+        description: >
+          The status-code element is a 3-digit integer code describing the
+          result of the server's attempt to understand and satisfy the client's
+          corresponding request.
         example: 200
       headers:
         type: object

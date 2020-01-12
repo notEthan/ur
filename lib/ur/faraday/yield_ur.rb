@@ -13,7 +13,7 @@ module Ur
       end
 
       def call(request_env)
-        ur = Ur.from_faraday_request(request_env, ur_class: @options[:ur_class])
+        ur = Ur.from_faraday_request(request_env, schemas: @options[:schemas])
         begin_request(ur)
         ur.faraday_on_complete(@app, request_env) do |response_env|
           finish_request(ur)

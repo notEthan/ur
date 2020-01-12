@@ -30,7 +30,7 @@ module Ur
   class FaradayMiddleware < ::Faraday::Middleware
     include Ur::Middleware
     def call(request_env)
-      ur = Ur.from_faraday_request(request_env)
+      ur = Ur.from_faraday_request(request_env, @options.select { |k, _| [:schemas].include?(k) })
       invoke_callback(:before_request, ur)
       begin_request(ur)
       ur.faraday_on_complete(@app, request_env) do |response_env|
@@ -43,7 +43,7 @@ module Ur
   class RackMiddleware
     include Ur::Middleware
     def call(env)
-      ur = Ur.from_rack_request(env)
+      ur = Ur.from_rack_request(env, @options.select { |k, _| [:schemas].include?(k) })
       invoke_callback(:before_request, ur)
       begin_request(ur)
       ur.with_rack_response(@app, env) do

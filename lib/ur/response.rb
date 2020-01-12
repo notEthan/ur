@@ -2,8 +2,8 @@
 
 require 'ur' unless Object.const_defined?(:Ur)
 
-class Ur
-  class Response
+module Ur
+  module Response
     include RequestAndResponse
     include SubUr
 

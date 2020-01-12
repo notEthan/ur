@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ur
+module Ur
   module Faraday
     # Faraday middleware which yields an Ur to the given block
     class YieldUr < ::Ur::FaradayMiddleware
@@ -13,7 +13,7 @@ class Ur
       end
 
       def call(request_env)
-        ur = (@options[:ur_class] || Ur).from_faraday_request(request_env)
+        ur = Ur.from_faraday_request(request_env, ur_class: @options[:ur_class])
         begin_request(ur)
         ur.faraday_on_complete(@app, request_env) do |response_env|
           finish_request(ur)

@@ -8,7 +8,7 @@ describe 'Ur' do
   end
 
   it 'initializes' do
-    Ur.new({})
+    Ur.new_jsi({})
   end
 
   it 'would prefer not to initialize' do

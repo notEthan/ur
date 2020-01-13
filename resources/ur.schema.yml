@@ -37,6 +37,7 @@ properties:
     properties:
       began_at_s:
         type: string
+        format: date-time
       duration:
         type: number
       tags:

@@ -1,5 +1,6 @@
 class Ur
   module Faraday
+    # Faraday middleware which yields an Ur to the given block
     class YieldUr < ::Faraday::Middleware
       def initialize(app, options = {}, &block)
         raise(ArgumentError, "no block given to yield ur") unless block

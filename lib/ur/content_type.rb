@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ur' unless Object.const_defined?(:Ur)
 
 class Ur

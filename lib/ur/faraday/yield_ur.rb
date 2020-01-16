@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Ur
   module Faraday
     class YieldUr < ::Faraday::Middleware

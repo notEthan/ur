@@ -37,8 +37,6 @@ class Ur
       end
 
       new({'bound' => 'inbound'}).tap do |ur|
-        ur.metadata.begin!
-
         ur.request['method'] = rack_request.request_method
 
         ur.request.addressable_uri = Addressable::URI.new(
@@ -70,7 +68,6 @@ class Ur
 
     def from_faraday_request(request_env)
       new({'bound' => 'outbound'}).tap do |ur|
-        ur.metadata.begin!
         ur.request['method'] = request_env[:method].to_s
         ur.request.uri = request_env[:url].normalize.to_s
         ur.request.headers = request_env[:request_headers]
@@ -107,8 +104,6 @@ class Ur
     response.body = response_body.to_enum.to_a.join('')
 
     response_body_proxy = ::Rack::BodyProxy.new(response_body) do
-      metadata.finish!
-
       yield
     end
     [status, response_headers, response_body_proxy]
@@ -119,7 +114,6 @@ class Ur
       response.status = response_env[:status]
       response.headers = response_env[:response_headers]
       response.set_body_from_faraday(response_env)
-      metadata.finish!
 
       yield(response_env)
     end

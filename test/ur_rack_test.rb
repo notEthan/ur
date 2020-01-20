@@ -10,8 +10,6 @@ describe 'Ur rack integration' do
     assert_equal('bar', ur.request.headers['foo'])
     assert_equal('https://ur.unth.net/', ur.request.uri)
     assert(ur.response.empty?)
-    assert_instance_of(Time, ur.metadata.began_at)
-    assert_nil(ur.metadata.duration)
     assert(ur.validate)
   end
   it 'builds from a rack request' do
@@ -22,8 +20,6 @@ describe 'Ur rack integration' do
     assert_equal('bar', ur.request.headers['foo'])
     assert_equal('https://ur.unth.net/', ur.request.uri)
     assert(ur.response.empty?)
-    assert_instance_of(Time, ur.metadata.began_at)
-    assert_nil(ur.metadata.duration)
     assert(ur.validate)
   end
 end

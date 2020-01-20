@@ -37,7 +37,7 @@ describe 'Ur' do
         assert_equal('bar', ur.request.headers['foo'])
         assert_equal('https://ur.unth.net/', ur.request.uri)
         assert(ur.response.empty?)
-        assert_instance_of(Time, ur.metadata.began_at)
+        assert_nil(ur.metadata.began_at)
         assert_nil(ur.metadata.duration)
         assert(ur.validate)
       end,
@@ -71,7 +71,7 @@ describe 'Ur' do
           assert_equal('https://ur.unth.net/', ur.request.uri)
           assert_equal(Addressable::URI.parse('https://ur.unth.net/'), ur.request.addressable_uri)
           assert(ur.response.empty?)
-          assert_instance_of(Time, ur.metadata.began_at)
+          assert_nil(ur.metadata.began_at)
           assert_nil(ur.metadata.duration)
           assert(ur.validate)
         end,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "ur/version"
 
 require 'jsi'
@@ -37,8 +39,6 @@ class Ur
       end
 
       new({'bound' => 'inbound'}).tap do |ur|
-        ur.metadata.begin!
-
         ur.request['method'] = rack_request.request_method
 
         ur.request.addressable_uri = Addressable::URI.new(
@@ -68,9 +68,8 @@ class Ur
       end
     end
 
-    def from_faraday_request(request_env, logger: nil)
+    def from_faraday_request(request_env)
       new({'bound' => 'outbound'}).tap do |ur|
-        ur.metadata.begin!
         ur.request['method'] = request_env[:method].to_s
         ur.request.uri = request_env[:url].normalize.to_s
         ur.request.headers = request_env[:request_headers]
@@ -89,7 +88,11 @@ class Ur
     self.metadata = {} if self.metadata.nil?
   end
 
-  def logger=(logger)
+  # Ur#logger_tags applies tags from a tagged logger to this ur's metadata.
+  # note: ur does not log anything and this logger is not stored.
+  # @param [logger] a tagged logger
+  # @return [void]
+  def logger_tags(logger)
     if logger && logger.formatter.respond_to?(:current_tags)
       metadata.tags = logger.formatter.current_tags.dup
     end
@@ -103,8 +106,6 @@ class Ur
     response.body = response_body.to_enum.to_a.join('')
 
     response_body_proxy = ::Rack::BodyProxy.new(response_body) do
-      metadata.finish!
-
       yield
     end
     [status, response_headers, response_body_proxy]
@@ -115,7 +116,6 @@ class Ur
       response.status = response_env[:status]
       response.headers = response_env[:response_headers]
       response.set_body_from_faraday(response_env)
-      metadata.finish!
 
       yield(response_env)
     end

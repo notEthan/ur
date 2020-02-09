@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ur' unless Object.const_defined?(:Ur)
 
 class Ur
@@ -13,10 +15,13 @@ class Ur
 
     attr_accessor :began_at_ns
 
+    # sets began_at from the current time
     def begin!
       self.began_at ||= Time.now
       self.began_at_ns ||= Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
     end
+
+    # sets the duration from the current time and began_at
     def finish!
       return if duration
       if began_at_ns

@@ -1,9 +1,9 @@
-id: https://schemas.ur.unth.net/ur
+$id: https://schemas.ur.unth.net/ur
 type: object
 properties:
   bound:
     type: string
-    description: '[rfc2616] Inbound and outbound refer to the request and response paths for messages: "inbound" means "traveling toward the origin server", and "outbound" means "traveling toward the user agent"'
+    description: '[RFC7230] The terms "inbound" and "outbound" are used to describe directional requirements in relation to the request route: "inbound" means toward the origin server and "outbound" means toward the user agent.'
     enum:
     - inbound
     - outbound
@@ -12,7 +12,7 @@ properties:
     properties:
       method:
         type: string
-        description: '[rfc2616] The Method token indicates the method to be performed on the resource identified by the Request-URI.'
+        description: '[RFC7230] The method token indicates the request method to be performed on the target resource.'
         example: POST
       uri:
         type: string
@@ -27,6 +27,10 @@ properties:
     properties:
       status:
         type: integer
+        description: >
+          The status-code element is a 3-digit integer code describing the
+          result of the server's attempt to understand and satisfy the client's
+          corresponding request.
         example: 200
       headers:
         type: object
@@ -37,6 +41,7 @@ properties:
     properties:
       began_at_s:
         type: string
+        format: date-time
       duration:
         type: number
       tags:

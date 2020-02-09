@@ -30,7 +30,7 @@ class MyRackMiddleware
     ur = Ur.from_rack_request(env)
 
     # set additional properties of the ur, for example:
-    ur.logger = my_logger
+    ur.logger_tags(my_logger)
 
     rack_response = ur.with_rack_response(@app, env) do
       # do things after the response
@@ -50,7 +50,7 @@ class MyFaradayMiddleware < ::Faraday::Middleware
     ur = Ur.from_faraday_request(request_env)
 
     # set additional properties of the ur, for example:
-    ur.logger = my_logger
+    ur.logger_tags(my_logger)
 
     ur.faraday_on_complete(@app, request_env) do |response_env|
       # do things after the response

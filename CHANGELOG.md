@@ -1,3 +1,6 @@
+# v0.1.1
+- minor fixes
+
 # v0.1.0
 - rename processing to metadata
 - Ur::ContentType

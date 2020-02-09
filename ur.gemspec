@@ -1,4 +1,3 @@
-
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "ur/version"
@@ -14,18 +13,10 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/notEthan/ur"
   spec.license       = "LGPL-3.0"
 
-  ignore_files = %w(.gitignore .travis.yml Gemfile test)
+  ignore_files   = %w(.gitignore .travis.yml Gemfile test)
   ignore_files_re = %r{\A(#{ignore_files.map { |f| Regexp.escape(f) }.join('|')})(/|\z)}
-  # Specify which files should be added to the gem when it is released.
-  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  Dir.chdir(File.expand_path('..', __FILE__)) do
-    spec.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(ignore_files_re) }
-    spec.test_files  = `git ls-files -z test`.split("\x0") + [
-      '.simplecov',
-    ]
-  end
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(ignore_files_re) }
+  spec.test_files   = `git ls-files -z test`.split("\x0") + ['.simplecov']
   spec.require_paths = ["lib"]
 
   spec.add_dependency "jsi", "~> 0.2.0"
@@ -35,8 +26,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "faraday"
   spec.add_development_dependency "faraday_middleware"
   spec.add_development_dependency "activesupport"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "minitest"
   spec.add_development_dependency "minitest-reporters"
   spec.add_development_dependency "simplecov"
 end

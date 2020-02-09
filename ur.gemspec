@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'ur: unified request representation'
   spec.description   = 'ur provides a unified representation of a request and response. it can be interpreted from rack, faraday, or potentially other sources, and provides a consistent interface to access the attributes inherent to the request and additional useful parsers and computation from the request.'
   spec.homepage      = "https://github.com/notEthan/ur"
-  spec.license       = "MIT"
+  spec.license       = "LGPL-3.0"
 
   ignore_files = %w(.gitignore .travis.yml Gemfile test)
   ignore_files_re = %r{\A(#{ignore_files.map { |f| Regexp.escape(f) }.join('|')})(/|\z)}

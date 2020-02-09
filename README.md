@@ -61,4 +61,6 @@ end
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+[<img align="right" src="https://github.com/notEthan/ur/raw/master/resources/icons/LGPL-3.0.png">](https://www.gnu.org/licenses/lgpl-3.0.html)
+
+Ur is Open Source Software licensed under the terms of the [GNU Lesser General Public License version 3](https://www.gnu.org/licenses/lgpl-3.0.html).

@@ -6,6 +6,7 @@ require 'jsi'
 require 'time'
 require 'addressable/uri'
 require 'pathname'
+require 'yaml'
 
 UR_ROOT = Pathname.new(__FILE__).dirname.parent.expand_path
 Ur = JSI::Schema.new(YAML.load_file(UR_ROOT.join('resources/ur.schema.yml'))).jsi_schema_module

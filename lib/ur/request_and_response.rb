@@ -25,6 +25,18 @@ module Ur
     end
     include FaradayEntity
 
+    def headers
+      headers = Hash.new do |h, k|
+        if k.respond_to?(:downcase) && k != k.downcase
+          h[k.downcase]
+        else
+          nil
+        end
+      end
+      super.each { |key, value| headers[key.downcase.freeze] = value }
+      headers
+    end
+
     # @return [Ur::ContentType] the string value of the content type header. returns an
     # {Ur::ContentType}, a subclass of String which additionally parses the Content-Type
     # according to relevant RFCs.

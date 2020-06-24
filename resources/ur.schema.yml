@@ -48,3 +48,7 @@ properties:
         type: array
         items:
           type: string
+allOf:
+  - additionalProperties:
+      title: sub-ur
+      description: a property value of an Ur

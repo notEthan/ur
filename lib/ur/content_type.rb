@@ -21,6 +21,8 @@ module Ur
   #   https://tools.ietf.org/html/rfc2045#section-5.1
   # - Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types
   #   https://tools.ietf.org/html/rfc2046
+  # - Additional Media Type Structured Syntax Suffixes
+  #   https://tools.ietf.org/html/rfc6839
   class ContentType < String
     # the character ranges in this SHOULD be significantly more restrictive,
     # and the `/<subtype>` construct should not be optional. however, we'll aim

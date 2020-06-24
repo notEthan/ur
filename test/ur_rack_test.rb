@@ -10,7 +10,7 @@ describe 'Ur rack integration' do
     assert_equal('bar', ur.request.headers['foo'])
     assert_equal('https://ur.unth.net/', ur.request.uri)
     assert(ur.response.empty?)
-    assert(ur.validate)
+    assert(ur.jsi_valid?)
   end
   it 'builds from a rack request' do
     env = Rack::Request.new(Rack::MockRequest.env_for('https://ur.unth.net/', {'HTTP_FOO' => 'bar'}))
@@ -20,6 +20,6 @@ describe 'Ur rack integration' do
     assert_equal('bar', ur.request.headers['foo'])
     assert_equal('https://ur.unth.net/', ur.request.uri)
     assert(ur.response.empty?)
-    assert(ur.validate)
+    assert(ur.jsi_valid?)
   end
 end

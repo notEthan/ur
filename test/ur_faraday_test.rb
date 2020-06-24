@@ -9,7 +9,7 @@ describe 'Ur faraday integration' do
       builder.use(Ur::FaradayMiddleware,
         after_response: -> (ur_) { ur = ur_ },
       )
-      builder.use(Faraday::Adapter::Rack, -> (env) { [200, {'Content-Type' => 'text/plain'}, ['ᚒ']] })
+      builder.adapter(:rack, -> (env) { [200, {'Content-Type' => 'text/plain'}, ['ᚒ']] })
     end
     res = faraday_conn.get('/')
     assert_equal('ᚒ', res.body)
@@ -25,7 +25,7 @@ describe 'Ur faraday integration' do
       builder.use(Ur::FaradayMiddleware,
         after_response: -> (ur_) { ur = ur_ },
       )
-      builder.use(Faraday::Adapter::Rack, -> (env) { [200, {'Content-Type' => 'text/plain'}, ['☺']] })
+      builder.adapter(:rack, -> (env) { [200, {'Content-Type' => 'text/plain'}, ['☺']] })
     end
     res = faraday_conn.post('/', StringIO.new('hello!'))
     assert_equal('☺', res.body)
@@ -44,7 +44,7 @@ describe 'Ur faraday integration' do
         after_response: -> (ur_) { ur = ur_ },
       )
       builder.response :json, preserve_raw: true
-      builder.use(Faraday::Adapter::Rack, -> (env) { [200, {'Content-Type' => 'application/json'}, ['{}']] })
+      builder.adapter(:rack, -> (env) { [200, {'Content-Type' => 'application/json'}, ['{}']] })
     end
     res = faraday_conn.post('/', {'a' => 'b'})
     assert_equal({}, res.body)
@@ -63,7 +63,7 @@ describe 'Ur faraday integration' do
       )
       builder.request :json
       builder.response :json
-      builder.use(Faraday::Adapter::Rack, -> (env) { [200, {'Content-Type' => 'application/json'}, ['{}']] })
+      builder.adapter(:rack, -> (env) { [200, {'Content-Type' => 'application/json'}, ['{}']] })
     end
     res = faraday_conn.post('/', {'a' => 'b'})
     assert_equal({}, res.body)

@@ -92,7 +92,7 @@ describe 'Ur' do
           assert(ur.validate)
         end,
       )
-      builder.use(Faraday::Adapter::Rack, rack_app)
+      builder.adapter(:rack, rack_app)
     end
     res = faraday_conn.get('/', nil, {'Foo' => 'bar'})
     assert(called_rack_before_request)

@@ -4,7 +4,7 @@ require 'active_support'
 
 describe 'Ur' do
   it 'has a valid schema' do
-    Ur.schema.validate_schema!
+    assert(Ur.schema.jsi_valid?)
   end
 
   it 'initializes' do
@@ -39,7 +39,7 @@ describe 'Ur' do
         assert(ur.response.empty?)
         assert_nil(ur.metadata.began_at)
         assert_nil(ur.metadata.duration)
-        assert(ur.validate)
+        assert(ur.jsi_valid?)
       end,
       after_response: -> (ur) do
         called_rack_after_response = true
@@ -55,7 +55,7 @@ describe 'Ur' do
         assert_instance_of(Float, ur.metadata.duration)
         assert_operator(ur.metadata.duration, :>, 0)
         assert_equal(['ur_test_rack'], ur.metadata.tags.to_a)
-        assert(ur.validate)
+        assert(ur.jsi_valid?)
       end,
     )
     faraday_conn = ::Faraday.new('https://ur.unth.net/') do |builder|
@@ -73,7 +73,7 @@ describe 'Ur' do
           assert(ur.response.empty?)
           assert_nil(ur.metadata.began_at)
           assert_nil(ur.metadata.duration)
-          assert(ur.validate)
+          assert(ur.jsi_valid?)
         end,
         after_response: -> (ur) do
           called_faraday_after_response = true
@@ -89,7 +89,7 @@ describe 'Ur' do
           assert_instance_of(Float, ur.metadata.duration)
           assert_operator(ur.metadata.duration, :>, 0)
           assert_equal(['ur_test_faraday'], ur.metadata.tags.to_a)
-          assert(ur.validate)
+          assert(ur.jsi_valid?)
         end,
       )
       builder.adapter(:rack, rack_app)

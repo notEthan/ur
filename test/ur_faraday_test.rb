@@ -17,7 +17,7 @@ describe 'Ur faraday integration' do
     assert_equal('get', ur.request['method'])
     assert_equal('text/plain', ur.response.headers['Content-Type'])
     assert_equal('ᚒ', ur.response.body)
-    assert(ur.validate)
+    assert(ur.jsi_valid?)
   end
   it 'integrates, IO body' do
     ur = nil
@@ -34,7 +34,7 @@ describe 'Ur faraday integration' do
     assert_equal('hello!', ur.request.body)
     assert_equal('text/plain', ur.response.headers['Content-Type'])
     assert_equal('☺', ur.response.body)
-    assert(ur.validate)
+    assert(ur.jsi_valid?)
   end
   it 'integrates, faraday middleware munges the json bodies but uses preserve_raw' do
     ur = nil
@@ -53,7 +53,7 @@ describe 'Ur faraday integration' do
     assert_equal('{"a":"b"}', ur.request.body)
     assert_equal('application/json', ur.response.headers['Content-Type'])
     assert_equal('{}', ur.response.body)
-    assert(ur.validate)
+    assert(ur.jsi_valid?)
   end
   it 'integrates, faraday middleware munges the json bodies and does not preserve_raw' do
     ur = nil
@@ -74,6 +74,6 @@ describe 'Ur faraday integration' do
     assert_equal('application/json', ur.response.headers['Content-Type'])
     assert_nil(ur.response.body) # no good
     assert_json_equal({}, ur.response['body_parsed']) # best we get here
-    assert(ur.validate)
+    assert(ur.jsi_valid?)
   end
 end

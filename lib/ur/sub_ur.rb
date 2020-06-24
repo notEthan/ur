@@ -5,7 +5,7 @@ require 'ur' unless Object.const_defined?(:Ur)
 module Ur
   module SubUr
     def ur
-      parent_jsis.detect { |p| p.is_a?(::Ur) }
+      jsi_parent_nodes.detect { |p| p.is_a?(::Ur) }
     end
   end
 end

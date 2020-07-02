@@ -2,7 +2,7 @@
 
 require 'ur' unless Object.const_defined?(:Ur)
 
-class Ur
+module Ur
   module Middleware
     def initialize(app, options = {})
       @app = app

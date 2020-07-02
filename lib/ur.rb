@@ -8,8 +8,8 @@ require 'addressable/uri'
 require 'pathname'
 
 UR_ROOT = Pathname.new(__FILE__).dirname.parent.expand_path
-Ur = JSI.class_for_schema(YAML.load_file(UR_ROOT.join('resources/ur.schema.yml')))
-class Ur
+Ur = JSI::Schema.new(YAML.load_file(UR_ROOT.join('resources/ur.schema.yml'))).jsi_schema_module
+module Ur
   VERSION = UR_VERSION
 
   autoload :SubUr, 'ur/sub_ur'
@@ -19,9 +19,9 @@ class Ur
   autoload :RackMiddleware, 'ur/middleware'
   autoload :Faraday, 'ur/faraday'
 
-  Request = JSI.class_for_schema(self.schema['properties']['request'])
-  Response = JSI.class_for_schema(self.schema['properties']['response'])
-  Metadata = JSI.class_for_schema(self.schema['properties']['metadata'])
+  Request = self.schema.properties['request'].jsi_schema_module
+  Response = self.schema.properties['response'].jsi_schema_module
+  Metadata = self.schema.properties['metadata'].jsi_schema_module
   require 'ur/request'
   require 'ur/response'
   require 'ur/metadata'
@@ -29,6 +29,18 @@ class Ur
   autoload :ContentType, 'ur/content_type'
 
   class << self
+    def new(instance = {}, ur_class: nil, **options)
+      unless instance.respond_to?(:to_hash)
+        raise(TypeError, "expected hash for ur instance. got: #{instance.pretty_inspect.chomp}")
+      end
+      ur_class ||= ::Ur.schema.jsi_schema_class
+      ur_class.new(instance, options).tap do |ur|
+        ur.request = {} if ur.request.nil?
+        ur.response = {} if ur.response.nil?
+        ur.metadata = {} if ur.metadata.nil?
+      end
+    end
+
     def from_rack_request(request_env)
       if request_env.is_a?(Rack::Request)
         rack_request = request_env
@@ -68,24 +80,14 @@ class Ur
       end
     end
 
-    def from_faraday_request(request_env)
-      new({'bound' => 'outbound'}).tap do |ur|
+    def from_faraday_request(request_env, ur_class: nil)
+      new({'bound' => 'outbound'}, ur_class: ur_class).tap do |ur|
         ur.request['method'] = request_env[:method].to_s
         ur.request.uri = request_env[:url].normalize.to_s
         ur.request.headers = request_env[:request_headers]
         ur.request.set_body_from_faraday(request_env)
       end
     end
-  end
-
-  def initialize(ur = {}, **opt, &b)
-    super(ur, **opt, &b)
-    unless instance.respond_to?(:to_hash)
-      raise(TypeError, "expected hash argument. got: #{ur.pretty_inspect.chomp}")
-    end
-    self.request = {} if self.request.nil?
-    self.response = {} if self.response.nil?
-    self.metadata = {} if self.metadata.nil?
   end
 
   # Ur#logger_tags applies tags from a tagged logger to this ur's metadata.

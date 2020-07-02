@@ -2,7 +2,7 @@
 
 require 'ur' unless Object.const_defined?(:Ur)
 
-class Ur
+module Ur
   # functionality common to Request and Response
   module RequestAndResponse
     # functionality for handling request/response entities from Faraday

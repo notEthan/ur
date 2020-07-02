@@ -2,8 +2,8 @@
 
 require 'ur' unless Object.const_defined?(:Ur)
 
-class Ur
-  class Metadata
+module Ur
+  module Metadata
     include SubUr
 
     def began_at
@@ -17,8 +17,8 @@ class Ur
 
     # sets began_at from the current time
     def begin!
-      self.began_at ||= Time.now
-      self.began_at_ns ||= Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
+      self.began_at = Time.now
+      self.began_at_ns = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
     end
 
     # sets the duration from the current time and began_at

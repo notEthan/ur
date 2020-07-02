@@ -13,7 +13,7 @@ describe 'Ur faraday integration' do
     end
     res = faraday_conn.get('/')
     assert_equal('ᚒ', res.body)
-    assert_instance_of(Ur, ur)
+    assert_kind_of(Ur, ur)
     assert_equal('get', ur.request['method'])
     assert_equal('text/plain', ur.response.headers['Content-Type'])
     assert_equal('ᚒ', ur.response.body)
@@ -29,7 +29,7 @@ describe 'Ur faraday integration' do
     end
     res = faraday_conn.post('/', StringIO.new('hello!'))
     assert_equal('☺', res.body)
-    assert_instance_of(Ur, ur)
+    assert_kind_of(Ur, ur)
     assert_equal('post', ur.request['method'])
     assert_equal('hello!', ur.request.body)
     assert_equal('text/plain', ur.response.headers['Content-Type'])
@@ -48,7 +48,7 @@ describe 'Ur faraday integration' do
     end
     res = faraday_conn.post('/', {'a' => 'b'})
     assert_equal({}, res.body)
-    assert_instance_of(Ur, ur)
+    assert_kind_of(Ur, ur)
     assert_equal('post', ur.request['method'])
     assert_equal('{"a":"b"}', ur.request.body)
     assert_equal('application/json', ur.response.headers['Content-Type'])
@@ -67,7 +67,7 @@ describe 'Ur faraday integration' do
     end
     res = faraday_conn.post('/', {'a' => 'b'})
     assert_equal({}, res.body)
-    assert_instance_of(Ur, ur)
+    assert_kind_of(Ur, ur)
     assert_equal('post', ur.request['method'])
     assert_nil(ur.request.body) # no good
     assert_json_equal({"a" => "b"}, ur.request['body_parsed']) # best we get here

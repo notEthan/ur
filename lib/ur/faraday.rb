@@ -2,7 +2,7 @@
 
 require 'faraday'
 
-class Ur
+module Ur
   module Faraday
     autoload :YieldUr, 'ur/faraday/yield_ur'
   end

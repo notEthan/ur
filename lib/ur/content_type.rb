@@ -2,7 +2,7 @@
 
 require 'ur' unless Object.const_defined?(:Ur)
 
-class Ur
+module Ur
   # Ur::ContentType represents a Content-Type header field.
   # it parses the media type and its components, as well as any parameters.
   #

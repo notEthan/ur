@@ -29,11 +29,12 @@ module Ur
   autoload :ContentType, 'ur/content_type'
 
   class << self
-    def new(instance = {}, ur_class: nil, **options)
+    def new(instance = {}, schemas: Set[], **options)
       unless instance.respond_to?(:to_hash)
         raise(TypeError, "expected hash for ur instance. got: #{instance.pretty_inspect.chomp}")
       end
-      ur_class ||= ::Ur.schema.jsi_schema_class
+
+      ur_class = JSI.class_for_schemas(Set[schema] + schemas)
       ur_class.new(instance, options).tap do |ur|
         ur.request = {} if ur.request.nil?
         ur.response = {} if ur.response.nil?
@@ -41,7 +42,7 @@ module Ur
       end
     end
 
-    def from_rack_request(request_env)
+    def from_rack_request(request_env, **options)
       if request_env.is_a?(Rack::Request)
         rack_request = request_env
         env = request_env.env
@@ -50,7 +51,7 @@ module Ur
         env = request_env
       end
 
-      new({'bound' => 'inbound'}).tap do |ur|
+      new({'bound' => 'inbound'}, options).tap do |ur|
         ur.request['method'] = rack_request.request_method
 
         ur.request.addressable_uri = Addressable::URI.new(
@@ -80,8 +81,8 @@ module Ur
       end
     end
 
-    def from_faraday_request(request_env, ur_class: nil)
-      new({'bound' => 'outbound'}, ur_class: ur_class).tap do |ur|
+    def from_faraday_request(request_env, **options)
+      new({'bound' => 'outbound'}, options).tap do |ur|
         ur.request['method'] = request_env[:method].to_s
         ur.request.uri = request_env[:url].normalize.to_s
         ur.request.headers = request_env[:request_headers]

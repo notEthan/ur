@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/notEthan/ur"
   spec.license       = "LGPL-3.0"
 
-  ignore_files   = %w(.gitignore Gemfile test)
+  ignore_files   = %w(.gitignore .github Gemfile test)
   ignore_files_re = %r{\A(#{ignore_files.map { |f| Regexp.escape(f) }.join('|')})(/|\z)}
   spec.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(ignore_files_re) }
   spec.test_files   = `git ls-files -z test`.split("\x0") + ['.simplecov']

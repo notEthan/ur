@@ -35,8 +35,7 @@ module Ur
         raise(TypeError, "expected hash for ur instance. got: #{instance.pretty_inspect.chomp}")
       end
 
-      ur_class = JSI.class_for_schemas(Set[schema] + schemas)
-      ur_class.new(instance, options).tap do |ur|
+      JSI::SchemaSet[schema, *schemas].new_jsi(instance, **options).tap do |ur|
         ur.request = {} if ur.request.nil?
         ur.response = {} if ur.response.nil?
         ur.metadata = {} if ur.metadata.nil?

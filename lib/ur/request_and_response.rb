@@ -25,9 +25,10 @@ module Ur
     end
     include FaradayEntity
 
-    # @return [Ur::ContentType] the string value of the content type header. returns an
+    # the string value of the content type header. returns an
     # {Ur::ContentType}, a subclass of String which additionally parses the Content-Type
     # according to relevant RFCs.
+    # @return [Ur::ContentType]
     def content_type
       headers.each do |k, v|
         return ContentType.new(v) if k =~ /\Acontent[-_]type\z/i
@@ -40,17 +41,20 @@ module Ur
       content_type ? content_type.media_type : nil
     end
 
-    # @return [Boolean] is our content type JSON?
+    # is our content type JSON?
+    # @return [Boolean]
     def json?
       content_type && content_type.json?
     end
 
-    # @return [Boolean] is our content type XML?
+    # is our content type XML?
+    # @return [Boolean]
     def xml?
       content_type && content_type.xml?
     end
 
-    # @return [Boolean] is our content type x-www-form-urlencoded?
+    # is our content type `x-www-form-urlencoded`?
+    # @return [Boolean]
     def form_urlencoded?
       content_type && content_type.form_urlencoded?
     end

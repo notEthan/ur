@@ -23,10 +23,11 @@ module Ur
   #   https://tools.ietf.org/html/rfc2046
   class ContentType < String
     # the character ranges in this SHOULD be significantly more restrictive,
-    # and the /<subtype> construct should not be optional. however, we'll aim
+    # and the `/<subtype>` construct should not be optional. however, we'll aim
     # to match whatever media type we are given.
     #
     # example:
+    #
     #     MEDIA_TYPE_REGEXP.match('application/vnd.github+json').named_captures
     #     =>
     #     {
@@ -38,6 +39,7 @@ module Ur
     #     }
     #
     # example of being more permissive than the spec allows:
+    #
     #     MEDIA_TYPE_REGEXP.match('where the %$*! am I').named_captures
     #     =>
     #     {
@@ -116,44 +118,53 @@ module Ur
       freeze
     end
 
-    # @return [String, nil] the media type of this content type.
-    #   e.g. "application/vnd.github+json" in content-type: application/vnd.github+json; charset="utf-8"
+    # the media type of this content type.
+    # e.g. `"application/vnd.github+json"` in `content-type: application/vnd.github+json; charset="utf-8"`
+    # @return [String, nil]
     attr_reader :media_type
 
-    # @return [String, nil] the 'type' portion of our media type.
-    #   e.g. "application" in content-type: application/vnd.github+json; charset="utf-8"
+    # the 'type' portion of our media type.
+    # e.g. `"application"` in `content-type: application/vnd.github+json; charset="utf-8"`
+    # @return [String, nil]
     attr_reader :type
 
-    # @return [String, nil] the 'subtype' portion of our media type.
-    #   e.g. "vnd.github+json" in content-type: application/vnd.github+json; charset="utf-8"
+    # the 'subtype' portion of our media type.
+    # e.g. `"vnd.github+json"` in `content-type: application/vnd.github+json; charset="utf-8"`
+    # @return [String, nil]
     attr_reader :subtype
 
-    # @return [String, nil] the 'facet' portion of our media type.
-    #   e.g. "vnd" in content-type: application/vnd.github+json; charset="utf-8"
+    # the 'facet' portion of our media type.
+    # e.g. `"vnd"` in `content-type: application/vnd.github+json; charset="utf-8"`
+    # @return [String, nil]
     attr_reader :facet
 
-    # @return [String, nil] the 'suffix' portion of our media type.
-    #   e.g. "json" in content-type: application/vnd.github+json; charset="utf-8"
+    # the 'suffix' portion of our media type.
+    # e.g. `"json"` in `content-type: application/vnd.github+json; charset="utf-8"`
+    # @return [String, nil]
     attr_reader :suffix
 
-    # @return [Hash<String, String>] parameters of this content type.
-    #   e.g. {"charset" => "utf-8"} in content-type: application/vnd.github+json; charset="utf-8"
+    # parameters of this content type.
+    # e.g. `{"charset" => "utf-8"}` in `content-type: application/vnd.github+json; charset="utf-8"`
+    # @return [Hash<String, String>]
     attr_reader :parameters
 
+    # is the 'type' portion of our media type equal (case-insensitive) to the given other_type
     # @param other_type
-    # @return [Boolean] is the 'type' portion of our media type equal (case-insensitive) to the given other_type
+    # @return [Boolean]
     def type?(other_type)
       type && type.casecmp?(other_type)
     end
 
+    # is the 'subtype' portion of our media type equal (case-insensitive) to the given other_subtype
     # @param other_subtype
-    # @return [Boolean] is the 'subtype' portion of our media type equal (case-insensitive) to the given other_subtype
+    # @return [Boolean]
     def subtype?(other_subtype)
       subtype && subtype.casecmp?(other_subtype)
     end
 
+    # is the 'suffix' portion of our media type equal (case-insensitive) to the given other_suffix
     # @param other_suffix
-    # @return [Boolean] is the 'suffix' portion of our media type equal (case-insensitive) to the given other_suffix
+    # @return [Boolean]
     def suffix?(other_suffix)
       suffix && suffix.casecmp?(other_suffix)
     end
@@ -173,11 +184,12 @@ module Ur
       ecmascript
     ).map(&:freeze).freeze
 
+    # does this content type appear to be binary?
+    # this library makes its best guess based on a very incomplete knowledge
+    # of which media types indicate binary or text.
     # @param unknown [Boolean] return this value when we have no idea whether
     #   our media type is binary or text.
-    # @return [Boolean] does this content type appear to be binary?
-    #   this library makes its best guess based on a very incomplete knowledge
-    #   of which media types indicate binary or text.
+    # @return [Boolean]
     def binary?(unknown: true)
       return false if type_text?
 
@@ -192,52 +204,62 @@ module Ur
       return unknown
     end
 
-    # @return [Boolean] is this a JSON content type?
+    # is this a JSON content type?
+    # @return [Boolean]
     def json?
       suffix ? suffix.casecmp?('json') : subtype ? subtype.casecmp?('json') : false
     end
 
-    # @return [Boolean] is this an XML content type?
+    # is this an XML content type?
+    # @return [Boolean]
     def xml?
       suffix ? suffix.casecmp?('xml'): subtype ? subtype.casecmp?('xml') : false
     end
 
-    # @return [Boolean] is this a x-www-form-urlencoded content type?
+    # is this a `x-www-form-urlencoded` content type?
+    # @return [Boolean]
     def form_urlencoded?
       suffix ? suffix.casecmp?('x-www-form-urlencoded'): subtype ? subtype.casecmp?('x-www-form-urlencoded') : false
     end
 
-    # @return [Boolean] is the 'type' portion of our media type 'text'
+    # is the 'type' portion of our media type 'text'
+    # @return [Boolean]
     def type_text?
       type && type.casecmp?('text')
     end
 
-    # @return [Boolean] is the 'type' portion of our media type 'image'
+    # is the 'type' portion of our media type 'image'
+    # @return [Boolean]
     def type_image?
       type && type.casecmp?('image')
     end
 
-    # @return [Boolean] is the 'type' portion of our media type 'audio'
+    # is the 'type' portion of our media type 'audio'
+    # @return [Boolean]
     def type_audio?
       type && type.casecmp?('audio')
     end
 
-    # @return [Boolean] is the 'type' portion of our media type 'video'
+    # is the 'type' portion of our media type 'video'
+    # @return [Boolean]
     def type_video?
       type && type.casecmp?('video')
     end
 
-    # @return [Boolean] is the 'type' portion of our media type 'application'
+    # is the 'type' portion of our media type 'application'
+    # @return [Boolean]
     def type_application?
       type && type.casecmp?('application')
     end
 
-    # @return [Boolean] is the 'type' portion of our media type 'message'
+    # is the 'type' portion of our media type 'message'
+    # @return [Boolean]
     def type_message?
       type && type.casecmp?('message')
     end
 
-    # @return [Boolean] is the 'type' portion of our media type 'multipart'
+    # is the 'type' portion of our media type 'multipart'
+    # @return [Boolean]
     def type_multipart?
       type && type.casecmp?('multipart')
     end

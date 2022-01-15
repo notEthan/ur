@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 require 'faraday'
-require 'active_support/tagged_logging'
+require 'active_support'
 
 describe 'Ur' do
   it 'has a valid schema' do

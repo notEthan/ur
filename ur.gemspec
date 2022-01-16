@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "ur"
   spec.version       = UR_VERSION
   spec.authors       = ["Ethan"]
-  spec.email         = ["ethan@unth"]
+  spec.email         = ["ethan.ur@unth.net"]
 
   spec.summary       = 'ur: unified request representation'
   spec.description   = 'ur provides a unified representation of a request and response. it can be interpreted from rack, faraday, or potentially other sources, and provides a consistent interface to access the attributes inherent to the request and additional useful parsers and computation from the request.'

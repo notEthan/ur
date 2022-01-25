@@ -1,3 +1,7 @@
+# v0.2.1
+
+- JSI v0.6.0
+
 # v0.2.0
 
 - Ur uses JSI schema modules instead of classes

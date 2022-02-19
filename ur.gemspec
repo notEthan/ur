@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
     'CHANGELOG.md',
     'README.md',
     'resources/ur.schema.yml',
+    'ur.gemspec',
     *Dir['lib/**/*'],
   ].reject { |f| File.lstat(f).ftype == 'directory' }
 

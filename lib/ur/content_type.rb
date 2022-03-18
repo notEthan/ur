@@ -215,13 +215,13 @@ module Ur
     # is this an XML content type?
     # @return [Boolean]
     def xml?
-      suffix ? suffix.casecmp?('xml'): subtype ? subtype.casecmp?('xml') : false
+      suffix ? suffix.casecmp?('xml') : subtype ? subtype.casecmp?('xml') : false
     end
 
     # is this a `x-www-form-urlencoded` content type?
     # @return [Boolean]
     def form_urlencoded?
-      suffix ? suffix.casecmp?('x-www-form-urlencoded'): subtype ? subtype.casecmp?('x-www-form-urlencoded') : false
+      suffix ? suffix.casecmp?('x-www-form-urlencoded') : subtype ? subtype.casecmp?('x-www-form-urlencoded') : false
     end
 
     # is the 'type' portion of our media type 'text'

@@ -31,12 +31,25 @@ describe Ur::Weblink do
         example.each_slice(2).zip(links).each do |((target_uri, attributes), link)|
           assert_equal(Addressable::URI.parse(target_uri), link.target_uri)
           assert_equal(attributes, link.attributes)
+          attributes.each do |k, v|
+            assert_equal(v, link[k])
+          end
         end
       end
     end
 
     it 'gives an absolute uri based on context' do
       link = Ur::Weblink.parse_link_value('</bar>; rel=foo', 'http://example.com/foo').first
+      assert_equal(Addressable::URI.parse('http://example.com/bar'), link.absolute_target_uri)
+    end
+
+    it 'gives an absolute uri with unused context' do
+      link = Ur::Weblink.parse_link_value('<http://example.com/bar>; rel=foo', 'http://example.com/foo').first
+      assert_equal(Addressable::URI.parse('http://example.com/bar'), link.absolute_target_uri)
+    end
+
+    it 'gives an absolute uri without context' do
+      link = Ur::Weblink.parse_link_value('<http://example.com/bar>; rel=foo').first
       assert_equal(Addressable::URI.parse('http://example.com/bar'), link.absolute_target_uri)
     end
 
@@ -47,6 +60,12 @@ describe Ur::Weblink do
 
     it 'returns an empty array for nil link header' do
       assert_equal([], Ur::Weblink.parse_link_value(nil))
+    end
+
+    it 'compares rel' do
+      link = Ur::Weblink.parse_link_value('<http://example.com/bar>; rel=foo').first
+      assert_equal('foo', link.rel)
+      assert(link.rel?('FoO'))
     end
 
     it 'parse errors' do

@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
     'LICENSE.md',
     'CHANGELOG.md',
     'README.md',
+    '.yardopts',
     'resources/ur.schema.yml',
     'ur.gemspec',
     *Dir['lib/**/*'],

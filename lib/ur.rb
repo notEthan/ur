@@ -51,7 +51,7 @@ module Ur
         env = request_env
       end
 
-      new({'bound' => 'inbound'}, options).tap do |ur|
+      new({'bound' => 'inbound'}, **options).tap do |ur|
         ur.request['method'] = rack_request.request_method
 
         ur.request.addressable_uri = Addressable::URI.new(
@@ -82,7 +82,7 @@ module Ur
     end
 
     def from_faraday_request(request_env, **options)
-      new({'bound' => 'outbound'}, options).tap do |ur|
+      new({'bound' => 'outbound'}, **options).tap do |ur|
         ur.request['method'] = request_env[:method].to_s
         ur.request.uri = request_env[:url].normalize.to_s
         ur.request.headers = request_env[:request_headers]

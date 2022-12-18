@@ -102,4 +102,31 @@ describe 'Ur' do
     assert_equal(200, res.status)
     assert_equal('ᚒ', res.body)
   end
+
+  it 'has content type and media type' do
+    ur = Ur.new({
+      'request' => {
+        'headers' => {
+          'Content-Type' => 'application/vnd.github+json; charset=utf8',
+        },
+      },
+      'response' => {
+        'headers' => {
+          'Content-Type' => 'application/vnd.github+json; charset=utf8',
+        },
+      },
+    })
+    assert_instance_of(Ur::ContentType, ur.request.content_type)
+    assert_instance_of(Ur::ContentType, ur.response.content_type)
+    assert_equal('application/vnd.github+json; charset=utf8', ur.request.content_type)
+    assert_equal('application/vnd.github+json; charset=utf8', ur.response.content_type)
+    assert_equal('application/vnd.github+json', ur.request.media_type)
+    assert_equal('application/vnd.github+json', ur.response.media_type)
+    assert(ur.request.json?)
+    assert(ur.response.json?)
+    refute(ur.request.xml?)
+    refute(ur.response.xml?)
+    refute(ur.request.form_urlencoded?)
+    refute(ur.response.form_urlencoded?)
+  end
 end

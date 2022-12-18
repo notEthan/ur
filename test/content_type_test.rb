@@ -118,6 +118,8 @@ describe 'Ur::ContentType' do
         assert_equal('utf-8', content_type.parameters['Charset'])
         assert_equal('bar', content_type.parameters['foo'])
         assert_equal('bar', content_type.parameters['FOO'])
+        notstrish = Object.new.tap { |o| o.define_singleton_method(:to_s) { 'foo' } }
+        assert_nil(content_type.parameters[notstrish])
       end
     end
     describe 'repeated params' do

@@ -114,7 +114,7 @@ module Ur
     [status, response_headers, response_body_proxy]
   end
 
-  def faraday_on_complete(app, request_env, &block)
+  def faraday_on_complete(app, request_env)
     app.call(request_env).on_complete do |response_env|
       response.status = response_env[:status]
       response.headers = response_env[:response_headers]

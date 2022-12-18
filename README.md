@@ -61,6 +61,6 @@ end
 
 ## License
 
-[<img align="right" src="https://github.com/notEthan/ur/raw/master/resources/icons/LGPL-3.0.png">](https://www.gnu.org/licenses/lgpl-3.0.html)
+[<img align="right" src="https://www.gnu.org/graphics/lgplv3-147x51.png">](https://www.gnu.org/licenses/lgpl-3.0.html)
 
-Ur is Open Source Software licensed under the terms of the [GNU Lesser General Public License version 3](https://www.gnu.org/licenses/lgpl-3.0.html).
+Ur is licensed under the terms of the [GNU Lesser General Public License version 3](https://www.gnu.org/licenses/lgpl-3.0.html).

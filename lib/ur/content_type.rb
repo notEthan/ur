@@ -154,21 +154,21 @@ module Ur
     # @param other_type
     # @return [Boolean]
     def type?(other_type)
-      type && type.casecmp?(other_type)
+      type ? type.casecmp?(other_type) : false
     end
 
     # is the 'subtype' portion of our media type equal (case-insensitive) to the given other_subtype
     # @param other_subtype
     # @return [Boolean]
     def subtype?(other_subtype)
-      subtype && subtype.casecmp?(other_subtype)
+      subtype ? subtype.casecmp?(other_subtype) : false
     end
 
     # is the 'suffix' portion of our media type equal (case-insensitive) to the given other_suffix
     # @param other_suffix
     # @return [Boolean]
     def suffix?(other_suffix)
-      suffix && suffix.casecmp?(other_suffix)
+      suffix ? suffix.casecmp?(other_suffix) : false
     end
 
     SOME_TEXT_SUBTYPES = %w(
@@ -215,55 +215,55 @@ module Ur
     # is this an XML content type?
     # @return [Boolean]
     def xml?
-      suffix ? suffix.casecmp?('xml'): subtype ? subtype.casecmp?('xml') : false
+      suffix ? suffix.casecmp?('xml') : subtype ? subtype.casecmp?('xml') : false
     end
 
     # is this a `x-www-form-urlencoded` content type?
     # @return [Boolean]
     def form_urlencoded?
-      suffix ? suffix.casecmp?('x-www-form-urlencoded'): subtype ? subtype.casecmp?('x-www-form-urlencoded') : false
+      suffix ? suffix.casecmp?('x-www-form-urlencoded') : subtype ? subtype.casecmp?('x-www-form-urlencoded') : false
     end
 
     # is the 'type' portion of our media type 'text'
     # @return [Boolean]
     def type_text?
-      type && type.casecmp?('text')
+      type ? type.casecmp?('text') : false
     end
 
     # is the 'type' portion of our media type 'image'
     # @return [Boolean]
     def type_image?
-      type && type.casecmp?('image')
+      type ? type.casecmp?('image') : false
     end
 
     # is the 'type' portion of our media type 'audio'
     # @return [Boolean]
     def type_audio?
-      type && type.casecmp?('audio')
+      type ? type.casecmp?('audio') : false
     end
 
     # is the 'type' portion of our media type 'video'
     # @return [Boolean]
     def type_video?
-      type && type.casecmp?('video')
+      type ? type.casecmp?('video') : false
     end
 
     # is the 'type' portion of our media type 'application'
     # @return [Boolean]
     def type_application?
-      type && type.casecmp?('application')
+      type ? type.casecmp?('application') : false
     end
 
     # is the 'type' portion of our media type 'message'
     # @return [Boolean]
     def type_message?
-      type && type.casecmp?('message')
+      type ? type.casecmp?('message') : false
     end
 
     # is the 'type' portion of our media type 'multipart'
     # @return [Boolean]
     def type_multipart?
-      type && type.casecmp?('multipart')
+      type ? type.casecmp?('multipart') : false
     end
   end
 end

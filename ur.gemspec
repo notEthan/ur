@@ -17,12 +17,14 @@ Gem::Specification.new do |spec|
     'LICENSE.md',
     'CHANGELOG.md',
     'README.md',
+    '.yardopts',
     'resources/ur.schema.yml',
+    'ur.gemspec',
     *Dir['lib/**/*'],
   ].reject { |f| File.lstat(f).ftype == 'directory' }
 
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "jsi", "~> 0.6.0"
+  spec.add_dependency "jsi", "~> 0.6"
   spec.add_dependency "addressable", "~> 2.0"
 end

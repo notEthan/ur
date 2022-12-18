@@ -118,6 +118,8 @@ describe 'Ur::ContentType' do
         assert_equal('utf-8', content_type.parameters['Charset'])
         assert_equal('bar', content_type.parameters['foo'])
         assert_equal('bar', content_type.parameters['FOO'])
+        notstrish = Object.new.tap { |o| o.define_singleton_method(:to_s) { 'foo' } }
+        assert_nil(content_type.parameters[notstrish])
       end
     end
     describe 'repeated params' do
@@ -259,6 +261,52 @@ describe 'Ur::ContentType' do
           assert(!content_type.binary?(unknown: false))
         end
       end
+    end
+  end
+  describe 'component helpers' do
+    it 'case-insensitively checks components' do
+      assert(Ur::ContentType.new('application/json').type?('application'))
+      assert(Ur::ContentType.new('APPLICATION/JSON').type?('application'))
+      refute(Ur::ContentType.new('application/json').type?('text'))
+      refute(Ur::ContentType.new('APPLICATION/JSON').type?('text'))
+      assert(Ur::ContentType.new('application/json').subtype?('json'))
+      assert(Ur::ContentType.new('APPLICATION/JSON').subtype?('json'))
+      refute(Ur::ContentType.new('application/json').subtype?('plain'))
+      refute(Ur::ContentType.new('APPLICATION/JSON').subtype?('plain'))
+      assert(Ur::ContentType.new('application/foo+json').suffix?('json'))
+      assert(Ur::ContentType.new('APPLICATION/FOO+json').suffix?('json'))
+      refute(Ur::ContentType.new('application/foo+json').suffix?('plain'))
+      refute(Ur::ContentType.new('APPLICATION/FOO+json').suffix?('plain'))
+      refute(Ur::ContentType.new('application/json').suffix?('json'))
+      refute(Ur::ContentType.new('APPLICATION/JSON').suffix?('json'))
+      assert(Ur::ContentType.new('text/json').type_text?)
+      assert(Ur::ContentType.new('TEXT/JSON').type_text?)
+      refute(Ur::ContentType.new('application/json').type_text?)
+      refute(Ur::ContentType.new('APPLICATION/JSON').type_text?)
+      assert(Ur::ContentType.new('image/foo').type_image?)
+      assert(Ur::ContentType.new('IMAGE/FOO').type_image?)
+      refute(Ur::ContentType.new('application/json').type_image?)
+      refute(Ur::ContentType.new('APPLICATION/JSON').type_image?)
+      assert(Ur::ContentType.new('audio/bar').type_audio?)
+      assert(Ur::ContentType.new('AUDIO/BAR').type_audio?)
+      refute(Ur::ContentType.new('application/json').type_audio?)
+      refute(Ur::ContentType.new('APPLICATION/JSON').type_audio?)
+      assert(Ur::ContentType.new('video/foo').type_video?)
+      assert(Ur::ContentType.new('VIDEO/FOO').type_video?)
+      refute(Ur::ContentType.new('application/json').type_video?)
+      refute(Ur::ContentType.new('APPLICATION/JSON').type_video?)
+      assert(Ur::ContentType.new('application/json').type_application?)
+      assert(Ur::ContentType.new('APPLICATION/JSON').type_application?)
+      refute(Ur::ContentType.new('bar/baz').type_application?)
+      refute(Ur::ContentType.new('BAR/BAZ').type_application?)
+      assert(Ur::ContentType.new('message/foo').type_message?)
+      assert(Ur::ContentType.new('MESSAGE/FOO').type_message?)
+      refute(Ur::ContentType.new('application/json').type_message?)
+      refute(Ur::ContentType.new('APPLICATION/JSON').type_message?)
+      assert(Ur::ContentType.new('multipart/foo').type_multipart?)
+      assert(Ur::ContentType.new('MULTIPART/FOO').type_multipart?)
+      refute(Ur::ContentType.new('application/json').type_multipart?)
+      refute(Ur::ContentType.new('APPLICATION/JSON').type_multipart?)
     end
   end
   describe 'json?' do

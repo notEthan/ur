@@ -1,3 +1,9 @@
+# v0.2.2
+
+- Ur::Weblink
+- JSI v0.7.0
+- Ruby 3
+
 # v0.2.1
 
 - JSI v0.6.0

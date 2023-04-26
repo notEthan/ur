@@ -31,16 +31,16 @@ module Ur
   autoload :ContentType, 'ur/content_type'
 
   class << self
-    def new(instance = {}, schemas: Set[], **options)
+    def new(instance = {}, schemas: Set[], mutable: true, **options)
       unless instance.respond_to?(:to_hash)
         raise(TypeError, "expected hash for ur instance. got: #{instance.pretty_inspect.chomp}")
       end
 
-      JSI::SchemaSet[schema, *schemas].new_jsi(instance, **options).tap do |ur|
-        ur.request = {} if ur.request.nil?
-        ur.response = {} if ur.response.nil?
-        ur.metadata = {} if ur.metadata.nil?
-      end
+      instance = instance.merge({'request' => {}}) if !instance['request']
+      instance = instance.merge({'response' => {}}) if !instance['response']
+      instance = instance.merge({'metadata' => {}}) if !instance['metadata']
+
+      JSI::SchemaSet[schema, *schemas].new_jsi(instance, mutable: mutable, **options)
     end
 
     def from_rack_request(request_env, **options)

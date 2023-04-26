@@ -21,7 +21,7 @@ class UrSpec < Minitest::Spec
   end
 
   def assert_json_equal(exp, act, *a)
-    assert_equal(JSI::Typelike.as_json(exp), JSI::Typelike.as_json(act), *a)
+    assert_equal(JSI::Util.as_json(exp), JSI::Util.as_json(act), *a)
   end
 
   def assert_equal exp, act, msg = nil

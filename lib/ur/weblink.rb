@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'ur' unless Object.const_defined?(:Ur)
+require 'strscan'
 
 module Ur
   # a RFC5988 Web Link
@@ -32,7 +33,6 @@ module Ur
       ptoken = %r([a-zA-Z0-9!#\$%&'()*+\-./:<=>?@\[\]^_`{|}~])
       quoted_string = /"([^"]*)"/
 
-      require 'strscan'
       ss = StringScanner.new(link_value)
       parse_fail = proc do
         raise ParseError, "Unable to parse link value: #{link_value} " +

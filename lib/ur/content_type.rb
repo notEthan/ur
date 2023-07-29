@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'ur' unless Object.const_defined?(:Ur)
+require 'strscan'
 
 module Ur
   # Ur::ContentType represents a Content-Type header field.

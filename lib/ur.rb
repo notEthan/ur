@@ -33,7 +33,7 @@ module Ur
   class << self
     def new(instance = {}, schemas: Set[], mutable: true, **options)
       unless instance.respond_to?(:to_hash)
-        raise(TypeError, "expected hash for ur instance. got: #{instance.pretty_inspect.chomp}")
+        raise(TypeError, "Epected Ur instance content to be a Hash. Got: #{instance.pretty_inspect.chomp}")
       end
 
       instance = instance.merge({'request' => {}}) if !instance['request']

@@ -11,4 +11,4 @@ gem "rake"
 gem "gig"
 gem "minitest"
 gem "minitest-reporters"
-gem 'simplecov', '< 0.22'
+gem "simplecov"

@@ -20,6 +20,14 @@ module Ur
     class NoContextError < Error
     end
 
+    ATTR_CHAR = /[a-zA-Z0-9!#\$&+\-.^_`|~]/.freeze # defined in https://tools.ietf.org/html/rfc5987#section-3.2.1
+    PTOKEN = %r([a-zA-Z0-9!#\$%&'()*+\-./:<=>?@\[\]^_`{|}~]).freeze
+    QUOTED_STRING = /"([^"]*)"/.freeze
+
+    # attributes: semicolon, some attr_chars, an optional asterisk, equals, and a quoted
+    # string or series of unquoted ptokens
+    ATTRIBUTE_PAIR = /\s*;\s*(#{ATTR_CHAR.source}+\*?)\s*=\s*(?:#{QUOTED_STRING.source}|(#{PTOKEN.source}+))\s*/.freeze
+
     # parses an array of Web Links from the value an HTTP Link header, as described in
     # https://tools.ietf.org/html/rfc5988#section-5
     #
@@ -28,10 +36,6 @@ module Ur
       links = []
 
       return links unless link_value
-
-      attr_char = /[a-zA-Z0-9!#\$&+\-.^_`|~]/ # defined in https://tools.ietf.org/html/rfc5987#section-3.2.1
-      ptoken = %r([a-zA-Z0-9!#\$%&'()*+\-./:<=>?@\[\]^_`{|}~])
-      quoted_string = /"([^"]*)"/
 
       ss = StringScanner.new(link_value)
       parse_fail = proc do
@@ -44,9 +48,7 @@ module Ur
         ss.scan(/\s*<([^>]+)>/) || parse_fail.call
         target_uri = ss[1]
         attributes = {}
-        # get the attributes: semicolon, some attr_chars, an optional asterisk, equals, and a quoted
-        # string or series of unquoted ptokens
-        while ss.scan(/\s*;\s*(#{attr_char.source}+\*?)\s*=\s*(?:#{quoted_string.source}|(#{ptoken.source}+))\s*/)
+        while ss.scan(ATTRIBUTE_PAIR)
           attributes[ss[1]] = ss[2] || ss[3]
         end
         links << new(target_uri, attributes, context_uri)

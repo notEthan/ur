@@ -41,6 +41,14 @@ module Ur
       content_type ? content_type.media_type : nil
     end
 
+    # @return [Enumerable<Weblink>]
+    def links
+      headers.each do |k, v|
+        return(Weblink.parse_link_value(v, ur.request.uri)) if k =~ /\Alink\z/i
+      end
+      [].freeze
+    end
+
     # is our content type JSON?
     # @return [Boolean]
     def json?

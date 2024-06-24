@@ -117,6 +117,18 @@ module Ur
       "<#{target_uri}>" + attributes.map { |k,v| %Q(; #{k}="#{v}") }.join('')
     end
 
+    include(JSI::Util::Private::FingerprintHash::Immutable)
+
+    # @private
+    def jsi_fingerprint
+      {
+        class: Weblink,
+        target_uri: @target_uri,
+        attributes: @attributes,
+        context_uri: @context_uri,
+      }.freeze
+    end
+
     private
 
     # if uri is nil, returns nil; otherwise, tries to return a Addressable::URI

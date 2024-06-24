@@ -76,9 +76,11 @@ module Ur
           end
         end.compact.inject({}, &:update)
 
-        env["rack.input"].rewind
-        ur.request.body = env["rack.input"].read
-        env["rack.input"].rewind
+        if env["rack.input"]
+          env["rack.input"].rewind
+          ur.request.body = env["rack.input"].read
+          env["rack.input"].rewind
+        end
       end
     end
 

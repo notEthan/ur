@@ -46,24 +46,25 @@ module Ur
       while !ss.eos?
         # get the target_uri, within some angle brackets
         ss.scan(/\s*<([^>]+)>/) || parse_fail.call
-        target_uri = ss[1]
+        target_uri = JSI::Util.uri(ss[1].freeze)
         attributes = {}
         while ss.scan(ATTRIBUTE_PAIR)
-          attributes[ss[1]] = ss[2] || ss[3]
+          attributes[ss[1].freeze] = (ss[2] || ss[3]).freeze
         end
-        links << new(target_uri, attributes, context_uri)
+        links << new(target_uri, attributes.freeze, context_uri)
         unless ss.eos?
           # either the string ends or has a comma followed by another link
           ss.scan(/\s*,\s*/) || parse_fail.call
         end
       end
-      links
+      links.freeze
     end
 
     def initialize(target_uri, attributes, context_uri=nil)
-      @target_uri = to_addressable_uri(target_uri)
+      @target_uri = JSI::Util.uri(target_uri)
       @attributes = attributes
-      @context_uri = to_addressable_uri(context_uri)
+      @context_uri = JSI::Util.uri(context_uri)
+      freeze
     end
 
     # the context uri of the link, as an Addressable URI. this URI must be absolute, and the target_uri
@@ -127,13 +128,6 @@ module Ur
         attributes: @attributes,
         context_uri: @context_uri,
       }.freeze
-    end
-
-    private
-
-    # if uri is nil, returns nil; otherwise, tries to return a Addressable::URI
-    def to_addressable_uri(uri)
-      uri.nil? || uri.is_a?(Addressable::URI) ? uri : Addressable::URI.parse(uri)
     end
   end
 end

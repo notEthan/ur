@@ -99,3 +99,33 @@ describe Ur::Weblink do
     end
   end
 end
+
+describe('Ur::Request, Ur::Response #links') do
+  it('has content type and media type') do
+    ur = Ur.new({
+      'request' => {
+        'uri' => 'http://example.com/foo',
+        'headers' => {
+          'Link' => %q(<http://example.com>; rel="foo"; title="example"; title*="request example", </bar>,</baz>),
+        },
+      },
+      'response' => {
+        'headers' => {
+          'LINK' => %q(<http://example.com>; rel="foo"; title="example"; title*="response example", </bar>,<http://example.com/baz>; a=b),
+        },
+      },
+    })
+
+    assert_equal([
+      Ur::Weblink.new('http://example.com', {"rel"=>"foo", "title"=>"example", "title*"=>"request example"}, 'http://example.com/foo'),
+      Ur::Weblink.new('/bar', {}, 'http://example.com/foo'),
+      Ur::Weblink.new('/baz', {}, 'http://example.com/foo'),
+    ], ur.request.links)
+
+    assert_equal([
+      Ur::Weblink.new('http://example.com', {"rel"=>"foo", "title"=>"example", "title*"=>"response example"}, 'http://example.com/foo'),
+      Ur::Weblink.new('/bar', {}, 'http://example.com/foo'),
+      Ur::Weblink.new('http://example.com/baz', {'a' => 'b'}, 'http://example.com/foo'),
+    ], ur.response.links)
+  end
+end

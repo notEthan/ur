@@ -96,7 +96,7 @@ module Ur
 
   # Ur#logger_tags applies tags from a tagged logger to this ur's metadata.
   # note: ur does not log anything and this logger is not stored.
-  # @param [logger] a tagged logger
+  # @param logger a tagged logger
   # @return [void]
   def logger_tags(logger)
     if logger && logger.formatter.respond_to?(:current_tags)

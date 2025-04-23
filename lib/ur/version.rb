@@ -1,1 +1,1 @@
-UR_VERSION = "0.2.5".freeze
+UR_VERSION = "0.2.6".freeze

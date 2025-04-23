@@ -1,3 +1,7 @@
+# v0.2.6
+
+- JSI ~> v0.8
+
 # v0.2.5
 
 - Request and Response #links

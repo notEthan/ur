@@ -25,7 +25,7 @@ class UrSpec < Minitest::Spec
   end
 
   def assert_equal exp, act, msg = nil
-    msg = message(msg, E) { diff exp, act }
+    msg = message(msg, '') { diff exp, act }
     assert exp == act, msg
   end
 end
